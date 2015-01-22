@@ -1,0 +1,20 @@
+{default_translation_domain domain="supportticket.email.default"}
+
+<p>{intl l="Hi" },</p>
+
+<p>{intl l="You have an answer to your question : "}</p>
+
+<h4>{intl l="Your question: "}</h4>
+
+<h5>{$ticket->getSubject()}</h5>
+<p>{$ticket->getMessage()}</p>
+
+<h5>{intl l="The Answer: "}</h5>
+<p>{$ticket->getResponse()}</p>
+
+<p>
+    {$url={url path='/module/SupportTicket/support'}}
+    <a href="{$url}">{intl l="View your support desahboard online"}</a>
+</p>
+
+<p>{intl l="Best Regards."}</p>

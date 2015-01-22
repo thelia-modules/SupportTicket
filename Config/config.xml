@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://thelia.net/schema/dic/config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://thelia.net/schema/dic/config http://thelia.net/schema/dic/config/thelia-1.0.xsd">
+    <loops>
+        <!-- sample definition
+            <loop name="MySuperLoop" class="SupportTicket\Loop\MySuperLoop" />
+            -->
+        <loop name="support-ticket" class="SupportTicket\Loop\SupportTicket"/>
+    </loops>
+    <forms>
+        <!--
+            <form name="MyFormName" class="SupportTicket\Form\MySuperForm" />
+            -->
+        <form name="support_ticket.front.create" class="SupportTicket\Form\SupportTicketFrontCreateForm"/>
+        <form name="support_ticket.create" class="SupportTicket\Form\SupportTicketCreateForm"/>
+        <form name="support_ticket.update" class="SupportTicket\Form\SupportTicketUpdateForm"/>
+        <form name="supportticket.configuration" class="SupportTicket\Form\SupportTicketConfigForm"/>
+    </forms>
+    <commands>
+        <!--
+            <command class="SupportTicket\Command\MySuperCommand" />
+            -->
+    </commands>
+    <!--
+      <services>
+
+      </services>
+      -->
+      <hooks>
+          <hook id="supportticket.hook" class="SupportTicket\Hook\ManagerHook" scope="request">
+              <!-- front -->
+              <!-- fields="id,title,content" -->
+              <tag name="hook.event_listener" event="account.additional" />
+              <tag name="hook.event_listener" event="account-order.bottom" />
+              <tag name="hook.event_listener" event="main.javascript-initialization" />
+
+              <!-- back -->
+              <!-- <tag name="hook.event_listener" event="module.configuration" type="back" /> -->
+              <tag name="hook.event_listener" event="main.top-menu-tools" type="back" />
+              <tag name="hook.event_listener" event="order.tab" type="back" />
+              <tag name="hook.event_listener" event="customer.edit" type="back" />
+
+          </hook>
+
+
+    </hooks>
+
+    <!--
+      <exports>
+
+      </exports>
+      -->
+    <!--
+      <imports>
+
+      </imports>
+    -->
+    <services>
+        <service id="action.supportticket.support_ticket_table" class="SupportTicket\Action\SupportTicketAction" scope="request">
+            <argument type="service" id="thelia.parser" />
+            <argument type="service" id="mailer"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <service id="supportticket.form.type.support_ticket_id" class="SupportTicket\Form\Type\SupportTicketIdType">
+            <argument id="thelia.translator" type="service"/>
+            <tag name="thelia.form.type"/>
+        </service>
+    </services>
+
+</config>

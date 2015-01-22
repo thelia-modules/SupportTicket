@@ -1,0 +1,200 @@
+{extends file="layout.tpl"}
+
+{* Security *}
+{block name="no-return-functions" prepend}
+  {check_auth role="CUSTOMER" login_tpl="login"}
+{/block}
+
+{* Breadcrumb *}
+{block name='no-return-functions' append}
+  {$breadcrumbs = [
+  ['title' => {intl l="Account"}, 'url'=>{url path="/account"}],
+  ['title' => {intl l="Support" d="supportticket.fo.default"}, 'url'=>{url path="/account/comments"}]
+  ]}
+{/block}
+
+{block name="body-class"}page-account-supportticket{/block}
+
+{block name="main-content"}
+<div class="main">
+
+  <article class="col-main" role="main" aria-labelledby="main-label">
+
+    <h1 id="main-label" class="page-header">{intl l="Support" d="supportticket.fo.default"}</h1>
+
+    {$customer_id={customer attr="id"}}
+    {$orders=[]}
+    {$products=[]}
+    {loop type="order" name="customer.orders" customer="$customer_id" limit="20" order="create-date-reverse"}
+        {$order=$ID}
+        {$orders[]=['id' => $ID, 'ref' => $REF]}
+        {loop type="order_product" name="order-products" order=$ID}
+            {$products[]=['id' => $ID, 'order' => $order, 'ref' => $REF, 'title' => $TITLE]}
+        {/loop}
+    {/loop}
+
+    <div class="support-ticket-new">
+
+        {form name="support_ticket.front.create"}
+            <form id="support-product-form" method="post" action="{url path="/module/SupportTicket/create"}" {form_enctype form=$form}>
+
+                {form_hidden_fields form=$form}
+
+                {form_field form=$form field="customer_id"}
+                    <input type="hidden" name="{$name}" value="{$customer_id}" />
+                {/form_field}
+
+
+                {form_field form=$form field="order_id"}
+                <div class="form-group">
+                    <label>{$label}</label>
+                    <select name="{$name}" id="support-order-id" class="form-control" {$attr}>
+                        <option value="">{intl l="No order" d="supportticket.fo.default"}</option>
+                        {foreach $orders as $order}
+                            <option value="{$order.id}">{$order.ref}</option>
+                        {/foreach}
+                    </select>
+                </div>
+                {/form_field}
+
+                {form_field form=$form field="order_product_id"}
+                <div id="support-product-container" class="form-group">
+                    <label>{$label}</label>
+                    <select name="{$name}" id="support-product-id" class="form-control" {$attr}>
+                        <option value="">{intl l="No product" d="supportticket.fo.default"}</option>
+                        {foreach $products as $product}
+                            <option value="{$product.id}" data-order="{$product.order}">{$product.title} ({$product.ref})</option>
+                        {/foreach}
+                    </select>
+                </div>
+                {/form_field}
+
+                {form_field form=$form field="subject"}
+                <div class="form-group">
+                   <label>{$label}</label>
+                   <input type="text" name="{$name}" value="{$value}" class="form-control" {$attr}>
+                </div>
+                {/form_field}
+
+                {form_field form=$form field="message"}
+                <div class="form-group">
+                    <label>{$label}</label>
+                    <textarea name={$name} class="form-control" {$attr}>{$value}</textarea>
+                </div>
+                {/form_field}
+
+                <div class="form-group">
+                    <input type="submit" class="btn btn-validate" value="{intl l='validate' d='supportticket.fo.default'}" />
+                </div>
+
+            </form>
+        {/form}
+
+    </div>
+
+    {ifloop rel="support-ticket"}
+    <div class="support-ticket-list">
+        {loop name="support-ticket" type="support-ticket" customer="$customer_id" order="id-reverse" }
+        <div class="support-ticket-item">
+            <h4>{$SUBJECT}</h4>
+            <p class="text-muted">
+                {intl l="on %date" d="supportticket.fo.default" date={format_date date=$UPDATE_DATE output="date"} }
+                {if $ORDER_ID}
+                    {intl l=", order: " d="supportticket.fo.default"}
+                    {loop name="order" type="order" id=$ORDER_ID limit="1"}{$REF}{/loop}
+                {/if}
+                {if $ORDER_PRODUCT_ID}
+                    {intl l=", product: " d="supportticket.fo.default"}
+                    {loop name="order_product" type="order_product" id=$ORDER_PRODUCT_ID limit="1"}{$TITLE} ({$REF}){/loop}
+                {/if}
+            </p>
+            <p class="suport-ticket-item-message">
+                {$MESSAGE}
+            </p>
+            <p class="suport-ticket-item-response">
+                {$RESPONSE nofilter}
+            </p>
+        </div>
+        {/loop}
+    </div>
+    {/ifloop}
+
+    </article>
+
+</div><!-- /.layout -->
+{/block}
+
+{block name="stylesheet"}
+{/block}
+
+{block name="after-javascript-include"}
+{/block}
+
+{block name="javascript-initialization"}
+<script type="text/javascript">
+{literal}
+
+(function ($) {
+
+    $(document).ready(function () {
+
+        var $order = $('#support-order-id'),
+            $productContainer = $('#support-product-container'),
+            $product = $('#support-product-id'),
+            $form =  $('#support-product-form')
+        ;
+
+        $productContainer.hide();
+
+        $order.on('change', function(ev){
+            var $order = $(this),
+                orderId = $order.val();
+
+            if (orderId == '') {
+                $product.val('');
+                $productContainer.hide();
+            } else {
+                $product.val('');
+                $product.find('option').each(function(){
+                    var $option = $(this);
+
+                    if ($option.data("order") != orderId) {
+                        $option.css('display', "none");
+                    } else {
+                        $option.css('display', "");
+                    }
+                });
+                $productContainer.show();
+            }
+        });
+
+        $form.on('submit', function(e){
+
+            e.preventDefault();
+
+            var url = $form.attr("action");
+
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                data: $form.serialize(),
+                url: $form.attr('action')
+            }).done(function(data, textStatus, jqXHR){
+                var status;
+                if (data.success) {
+                    //alert(data.message);
+                } else {
+                    alert(data.message);
+                }
+            }).fail(function(jqXHR, textStatus, errorThrown){
+                alert(textStatus);
+            });
+
+        });
+
+    });
+
+})(jQuery);
+{/literal}
+</script>
+{/block}

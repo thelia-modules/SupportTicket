@@ -1,0 +1,16 @@
+{default_translation_domain domain="supportticket.email.default"}
+
+<p>{intl l="Hi" },</p>
+
+<p>{intl l="A customer has posted a new question : "}</p>
+
+<h4>{$ticket->getSubject()}</h4>
+<p>{$ticket->getMessage()}</p>
+
+<p>
+    {intl l="You can answer to the question here : "}
+    {$url={url path='/admin/module/SupportTicket/support_ticket/edit' support_ticket_id=$ticket->getId()}}
+    <a href="{$url}">{$url}</a>
+</p>
+
+<p>{intl l="Best Regards."}</p>

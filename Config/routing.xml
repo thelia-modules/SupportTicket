@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<routes xmlns="http://symfony.com/schema/routing" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
+
+  <!-- front -->
+  <route id="supportticket.front.support_ticket.list" path="/module/SupportTicket/support" methods="get">
+    <default key="_controller">SupportTicket:Front:default</default>
+  </route>
+  <route id="supportticket.front.support_ticket.create" path="/module/SupportTicket/create" methods="post">
+    <default key="_controller">SupportTicket:Front:create</default>
+  </route>
+  <route id="supportticket.front.support_ticket.delete" path="/module/SupportTicket/delete" methods="post">
+    <default key="_controller">SupportTicket:Front:delete</default>
+  </route>
+
+
+  <!-- back -->
+  <route id="supportticket.support_ticket.list" path="/admin/module/SupportTicket/support_ticket" methods="get">
+    <default key="_controller">SupportTicket:SupportTicket:default</default>
+  </route>
+  <route id="supportticket.support_ticket.create" path="/admin/module/SupportTicket/support_ticket" methods="post">
+    <default key="_controller">SupportTicket:SupportTicket:create</default>
+  </route>
+  <route id="supportticket.support_ticket.view" path="/admin/module/SupportTicket/support_ticket/edit" methods="get">
+    <default key="_controller">SupportTicket:SupportTicket:update</default>
+  </route>
+  <route id="supportticket.support_ticket.edit" path="/admin/module/SupportTicket/support_ticket/edit" methods="post">
+    <default key="_controller">SupportTicket:SupportTicket:processUpdate</default>
+  </route>
+  <route id="supportticket.support_ticket.delete" path="/admin/module/SupportTicket/support_ticket" methods="post">
+    <default key="_controller">SupportTicket:SupportTicket:delete</default>
+  </route>
+  <route id="supportticket.configuration.default" path="/admin/module/SupportTicket" methods="get">
+    <default key="_controller">SupportTicket:SupportTicketConfig:default</default>
+  </route>
+  <route id="supportticket.configuration.save" path="/admin/module/SupportTicket" methods="post">
+    <default key="_controller">SupportTicket:SupportTicketConfig:save</default>
+  </route>
+</routes>

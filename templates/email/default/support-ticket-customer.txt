@@ -1,0 +1,25 @@
+{default_translation_domain domain="supportticket.email.default"}
+
+{intl l="Hi" },
+
+{intl l="You have an answer to your question : "}
+
+{intl l="Your question: "}
+
+-----------------------
+{$ticket->getSubject()}
+-----------------------
+{$ticket->getMessage()}
+-----------------------
+
+-----------------------
+{intl l="The Answer: "}
+-----------------------
+{$ticket->getResponse()}
+-----------------------
+
+{$url={url path='/module/SupportTicket/support'}}
+{intl l="View your support desahboard online"} : {$url}
+
+
+{intl l="Best Regards."}

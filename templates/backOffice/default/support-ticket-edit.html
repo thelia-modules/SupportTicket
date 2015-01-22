@@ -1,0 +1,217 @@
+{extends file="admin-layout.tpl"}
+{default_translation_domain domain='supportticket.bo.default'}
+
+{block name="no-return-functions"}
+    {$admin_current_location = 'tools'}
+{/block}
+
+{block name="page-title"}{intl l='SupportTicket'}{/block}
+
+{block name="check-resource"}admin.module{/block}
+{block name="check-access"}update{/block}
+{block name="check-module"}SupportTicket{/block}
+
+{block name="main-content"}
+
+    {form name="support_ticket.update"}
+        <div id="wrapper" class="container">
+
+            {if $form_error}
+                <div class="alert alert-danger">{$form_error_message}</div>
+            {/if}
+
+            <div class="general-block-decorator">
+                <div class="title title-without-tabs">
+                    {intl l="SupportTicket edit" d="supportticket.bo.default"}
+                </div>
+
+                <div class="form-container">
+                    <form method="POST" action="{$current_url}" {form_enctype form=$form} class="clearfix" >
+
+                        {include "includes/inner-form-toolbar.html"
+                        close_url = {url path="/admin/module/SupportTicket/support_ticket"}
+                        }
+
+                        {form_field form=$form field="id"}
+                        {assign "support_ticket_id" $value}
+                            <input type="hidden" name="{$name}" value="{$value}"/>
+                        {/form_field}
+                        {form_field form=$form field="success_url"}
+                            <input type="hidden" name="{$name}" value="{url path='/admin/module/SupportTicket'}/support_ticket"/>
+                        {/form_field}
+                        {form_hidden_fields form=$form}
+
+                        {loop name="support_ticket_update" type="support-ticket" backend_context="yes" id=$support_ticket_id lang=$edit_language_id}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {*
+                                    {form_field form=$form field="status"}
+                                        <div class="form-group">
+                                            <label class="control-label" for="{$label_attr.for}">
+                                                {$label}
+                                                {if $required}<span class="required">*</span>{/if}
+                                            </label>
+
+                                            {form_error form=$form field="status"}{$message}{/form_error}
+
+                                                <input type="checkbox" class="form-control" name="{$name}" id="{$label_attr.for}" {if $STATUS}checked{/if} {form_field_attributes form=$form field="status"} placeholder="{intl l='The SupportTicket status'}" />
+                                        </div>
+                                    {/form_field}
+                                    {form_field form=$form field="customer_id"}
+                                        <div class="form-group">
+                                            <label class="control-label" for="{$label_attr.for}">
+                                                {$label}
+                                                {if $required}<span class="required">*</span>{/if}
+                                            </label>
+
+                                            {form_error form=$form field="customer_id"}{$message}{/form_error}
+
+                                                <input type="number" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$CUSTOMER_ID}" {form_field_attributes form=$form field="customer_id"} placeholder="{intl l='The SupportTicket customer_id'}" />
+                                        </div>
+                                    {/form_field}
+                                    {form_field form=$form field="order_id"}
+                                        <div class="form-group">
+                                            <label class="control-label" for="{$label_attr.for}">
+                                                {$label}
+                                                {if $required}<span class="required">*</span>{/if}
+                                            </label>
+
+                                            {form_error form=$form field="order_id"}{$message}{/form_error}
+
+                                                <input type="number" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$ORDER_ID}" {form_field_attributes form=$form field="order_id"} placeholder="{intl l='The SupportTicket order_id'}" />
+                                        </div>
+                                    {/form_field}
+                                    {form_field form=$form field="order_product_id"}
+                                        <div class="form-group">
+                                            <label class="control-label" for="{$label_attr.for}">
+                                                {$label}
+                                                {if $required}<span class="required">*</span>{/if}
+                                            </label>
+
+                                            {form_error form=$form field="order_product_id"}{$message}{/form_error}
+
+                                                <input type="number" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$ORDER_PRODUCT_ID}" {form_field_attributes form=$form field="order_product_id"} placeholder="{intl l='The SupportTicket order_product_id'}" />
+                                        </div>
+                                    {/form_field}
+                                    *}
+
+                                    <div class="form-group">
+                                        {intl l="Status: " d="supportticket.bo.default"}
+                                        <strong>{$STATUS_TEXT}</strong>
+                                    </div>
+                                    <div class="form-group">
+                                        {loop type="customer" name="customer" id={$CUSTOMER_ID} current="no" backend_context="1" limit="1"}
+                                            {intl l="Customer: " d="supportticket.bo.default"}
+                                            <a href="{url path='/admin/customer/update' customer_id=$CUSTOMER_ID}">
+                                                {$FIRSTNAME} {$LASTNAME}
+                                            </a>
+                                        {/loop}
+                                    </div>
+                                    <div class="form-group">
+                                        {if $ADMIN_ID}
+                                            {loop type="admin" name="admin" id={$ADMIN_ID} backend_context="1" limit="1"}
+                                            {intl l="Administrator: " d="supportticket.bo.default"}
+                                            <strong>{$FIRSTNAME} {$LASTNAME}</strong>
+                                            {/loop}
+                                        {/if}
+                                    </div>
+                                    <div class="form-group">
+                                        {if $ORDER_ID}
+                                            {loop type="order" name="order" id={$ORDER_ID} backend_context="1" limit="1"}
+                                                {intl l="Order: " d="supportticket.bo.default"}
+                                                <a href="{url path='/admin/order/update' order_id=$ID}">
+                                                    {$REF}
+                                                </a>
+                                            {/loop}
+                                        {/if}
+                                    </div>
+                                    <div class="form-group">
+                                        {if $ORDER_PRODUCT_ID}
+                                            {loop type="order" name="order" id={$ORDER_PRODUCT_ID} backend_context="1" limit="1"}
+                                                {intl l="Product: " d="supportticket.bo.default"}
+                                                <strong>{$TITLE}</strong>
+                                            {/loop}
+                                        {/if}
+                                    </div>
+                                    <div class="form-group">
+                                        {intl
+                                            l="created on <strong>%created_at</strong>. Last modification: <strong>%updated_at</strong>"
+                                            created_at={format_date date=$CREATE_DATE}
+                                            updated_at={format_date date=$UPDATE_DATE}
+                                            d="supportticket.bo.default"
+                                        }
+                                    </div>
+
+                                    {form_field form=$form field="admin_id"}
+                                        <input type="hidden" name="{$name}" id="{$label_attr.for}" value="{admin attr="id"}" />
+                                    {/form_field}
+
+                                    {form_field form=$form field="subject"}
+                                        <div class="form-group">
+                                            <label class="control-label" for="{$label_attr.for}">
+                                                {$label}
+                                                {if $required}<span class="required">*</span>{/if}
+                                            </label>
+
+                                            {form_error form=$form field="subject"}{$message}{/form_error}
+
+                                                <input type="text" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$SUBJECT}" {form_field_attributes form=$form field="subject"} placeholder="{intl l='The SupportTicket subject'}" />
+                                        </div>
+                                    {/form_field}
+                                    {form_field form=$form field="message"}
+                                        <div class="form-group">
+                                            <label class="control-label" for="{$label_attr.for}">
+                                                {$label}
+                                                {if $required}<span class="required">*</span>{/if}
+                                            </label>
+
+                                            {form_error form=$form field="message"}{$message}{/form_error}
+
+                                                <textarea class="form-control" name="{$name}" id="{$label_attr.for}" {form_field_attributes form=$form field="message"} placeholder="{intl l='The SupportTicket message'}">{$MESSAGE}</textarea>
+                                        </div>
+                                    {/form_field}
+
+                                    {form_field form=$form field="response"}
+                                        <div class="form-group">
+                                            <label class="control-label" for="{$label_attr.for}">
+                                                {$label}
+                                                {if $required}<span class="required">*</span>{/if}
+                                            </label>
+
+                                            {form_error form=$form field="response"}{$message}{/form_error}
+
+                                                <textarea class="form-control" name="{$name}" id="{$label_attr.for}" {form_field_attributes form=$form field="response"} placeholder="{intl l='The SupportTicket response'}">{$RESPONSE}</textarea>
+                                        </div>
+                                    {/form_field}
+
+                                    {form_field form=$form field="comment"}
+                                        <div class="form-group">
+                                            <label class="control-label" for="{$label_attr.for}">
+                                                {$label}
+                                                {if $required}<span class="required">*</span>{/if}
+                                            </label>
+
+                                            {form_error form=$form field="comment"}{$message}{/form_error}
+
+                                                <textarea class="form-control" name="{$name}" id="{$label_attr.for}" {form_field_attributes form=$form field="comment"} placeholder="{intl l='The SupportTicket comment'}">{$COMMENT}</textarea>
+                                        </div>
+                                    {/form_field}
+
+                                    {include "includes/inner-form-toolbar.html"
+                                        hide_flags = true
+                                        close_url = {url path="/admin/module/SupportTicket/support_ticket"}
+                                    }
+
+                                </div>
+                            </div>
+                        {/loop}
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    {/form}
+{/block}
+
+{block name="javascript-initialization"}
+{/block}

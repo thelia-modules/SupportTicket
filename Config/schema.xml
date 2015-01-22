@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database defaultIdMethod="native" name="thelia"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../core/vendor/propel/propel/resources/xsd/database.xsd" >
+
+    <table name="support_ticket" namespace="SupportTicket\Model">
+        <column autoIncrement="true" name="id" primaryKey="true" required="true" type="INTEGER" />
+        <column defaultValue="0" name="status" required="true" type="TINYINT" />
+        <column name="customer_id" required="true" type="INTEGER" />
+        <column name="admin_id" required="false" type="INTEGER" />
+        <column name="order_id" required="false" type="INTEGER" />
+        <column name="order_product_id" required="false" type="INTEGER" />
+        <column name="subject" size="255" type="VARCHAR" />
+        <column name="message" type="CLOB" />
+        <column name="response" type="CLOB" />
+        <column name="replied_at" type="DATETIME" required="false" />
+        <column name="comment" type="CLOB" />
+
+        <foreign-key foreignTable="customer" name="fk_support_ticket_customer_id" onDelete="CASCADE" onUpdate="RESTRICT">
+            <reference foreign="id" local="customer_id" />
+        </foreign-key>
+
+        <foreign-key foreignTable="admin" name="fk_support_ticket_admin_id" onDelete="SET NULL">
+            <reference foreign="id" local="admin_id" />
+        </foreign-key>
+
+        <foreign-key foreignTable="order" name="fk_support_ticket_order_id" onDelete="SET NULL">
+            <reference foreign="id" local="order_id" />
+        </foreign-key>
+
+        <foreign-key foreignTable="order_product" name="fk_support_ticket_order_product_id" onDelete="SET NULL">
+            <reference foreign="id" local="order_product_id" />
+        </foreign-key>
+
+        <behavior name="timestampable" />
+    </table>
+
+    <external-schema filename="local/config/schema.xml" referenceOnly="true" />
+</database>
