@@ -25,6 +25,7 @@ class SupportTicketEvent extends ActionEvent
     protected $subject;
     protected $message;
     protected $response;
+    protected $repliedAt;
     protected $comment;
     protected $supportTicket;
 
@@ -132,6 +133,24 @@ class SupportTicketEvent extends ActionEvent
     public function setResponse($response)
     {
         $this->response = $response;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRepliedAt()
+    {
+        return $this->repliedAt;
+    }
+
+    /**
+     * @param mixed $repliedAt
+     */
+    public function setRepliedAt($repliedAt)
+    {
+        $this->repliedAt = $repliedAt;
 
         return $this;
     }

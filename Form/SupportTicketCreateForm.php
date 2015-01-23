@@ -17,15 +17,15 @@ class SupportTicketCreateForm extends BaseSupportTicketCreateForm
     public function getTranslationKeys()
     {
         return array(
-            "status" => "Status",
-            "customer_id" => "Customer id",
-            "admin_id" => "Admin id",
-            "order_id" => "Order id",
-            "order_product_id" => "Order product id",
-            "subject" => "Subject",
-            "message" => "Message",
-            "response" => "Response",
-            "comment" => "Comment",
+            "status" => "Status", // ->trans("Status")
+            "customer_id" => "Customer id", // ->trans("Customer id")
+            "admin_id" => "Admin id", // ->trans("Admin id")
+            "order_id" => "Order id", // ->trans("Order id")
+            "order_product_id" => "Order product id", // ->trans("Order product id")
+            "subject" => "Subject", // ->trans("Subject")
+            "message" => "Message", // ->trans("Message")
+            "response" => "Response", // ->trans("Response")
+            "comment" => "Comment", // ->trans("Comment")
         );
     }
 }

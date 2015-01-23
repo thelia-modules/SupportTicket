@@ -34,6 +34,7 @@ use Thelia\Model\OrderProduct;
  * @method     ChildSupportTicketQuery orderBySubject($order = Criteria::ASC) Order by the subject column
  * @method     ChildSupportTicketQuery orderByMessage($order = Criteria::ASC) Order by the message column
  * @method     ChildSupportTicketQuery orderByResponse($order = Criteria::ASC) Order by the response column
+ * @method     ChildSupportTicketQuery orderByRepliedAt($order = Criteria::ASC) Order by the replied_at column
  * @method     ChildSupportTicketQuery orderByComment($order = Criteria::ASC) Order by the comment column
  * @method     ChildSupportTicketQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
  * @method     ChildSupportTicketQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
@@ -47,6 +48,7 @@ use Thelia\Model\OrderProduct;
  * @method     ChildSupportTicketQuery groupBySubject() Group by the subject column
  * @method     ChildSupportTicketQuery groupByMessage() Group by the message column
  * @method     ChildSupportTicketQuery groupByResponse() Group by the response column
+ * @method     ChildSupportTicketQuery groupByRepliedAt() Group by the replied_at column
  * @method     ChildSupportTicketQuery groupByComment() Group by the comment column
  * @method     ChildSupportTicketQuery groupByCreatedAt() Group by the created_at column
  * @method     ChildSupportTicketQuery groupByUpdatedAt() Group by the updated_at column
@@ -83,6 +85,7 @@ use Thelia\Model\OrderProduct;
  * @method     ChildSupportTicket findOneBySubject(string $subject) Return the first ChildSupportTicket filtered by the subject column
  * @method     ChildSupportTicket findOneByMessage(string $message) Return the first ChildSupportTicket filtered by the message column
  * @method     ChildSupportTicket findOneByResponse(string $response) Return the first ChildSupportTicket filtered by the response column
+ * @method     ChildSupportTicket findOneByRepliedAt(string $replied_at) Return the first ChildSupportTicket filtered by the replied_at column
  * @method     ChildSupportTicket findOneByComment(string $comment) Return the first ChildSupportTicket filtered by the comment column
  * @method     ChildSupportTicket findOneByCreatedAt(string $created_at) Return the first ChildSupportTicket filtered by the created_at column
  * @method     ChildSupportTicket findOneByUpdatedAt(string $updated_at) Return the first ChildSupportTicket filtered by the updated_at column
@@ -96,6 +99,7 @@ use Thelia\Model\OrderProduct;
  * @method     array findBySubject(string $subject) Return ChildSupportTicket objects filtered by the subject column
  * @method     array findByMessage(string $message) Return ChildSupportTicket objects filtered by the message column
  * @method     array findByResponse(string $response) Return ChildSupportTicket objects filtered by the response column
+ * @method     array findByRepliedAt(string $replied_at) Return ChildSupportTicket objects filtered by the replied_at column
  * @method     array findByComment(string $comment) Return ChildSupportTicket objects filtered by the comment column
  * @method     array findByCreatedAt(string $created_at) Return ChildSupportTicket objects filtered by the created_at column
  * @method     array findByUpdatedAt(string $updated_at) Return ChildSupportTicket objects filtered by the updated_at column
@@ -187,7 +191,7 @@ abstract class SupportTicketQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT ID, STATUS, CUSTOMER_ID, ADMIN_ID, ORDER_ID, ORDER_PRODUCT_ID, SUBJECT, MESSAGE, RESPONSE, COMMENT, CREATED_AT, UPDATED_AT FROM support_ticket WHERE ID = :p0';
+        $sql = 'SELECT ID, STATUS, CUSTOMER_ID, ADMIN_ID, ORDER_ID, ORDER_PRODUCT_ID, SUBJECT, MESSAGE, RESPONSE, REPLIED_AT, COMMENT, CREATED_AT, UPDATED_AT FROM support_ticket WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -615,6 +619,49 @@ abstract class SupportTicketQuery extends ModelCriteria
         }
 
         return $this->addUsingAlias(SupportTicketTableMap::RESPONSE, $response, $comparison);
+    }
+
+    /**
+     * Filter the query on the replied_at column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByRepliedAt('2011-03-14'); // WHERE replied_at = '2011-03-14'
+     * $query->filterByRepliedAt('now'); // WHERE replied_at = '2011-03-14'
+     * $query->filterByRepliedAt(array('max' => 'yesterday')); // WHERE replied_at > '2011-03-13'
+     * </code>
+     *
+     * @param     mixed $repliedAt The value to use as filter.
+     *              Values can be integers (unix timestamps), DateTime objects, or strings.
+     *              Empty strings are treated as NULL.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return ChildSupportTicketQuery The current query, for fluid interface
+     */
+    public function filterByRepliedAt($repliedAt = null, $comparison = null)
+    {
+        if (is_array($repliedAt)) {
+            $useMinMax = false;
+            if (isset($repliedAt['min'])) {
+                $this->addUsingAlias(SupportTicketTableMap::REPLIED_AT, $repliedAt['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($repliedAt['max'])) {
+                $this->addUsingAlias(SupportTicketTableMap::REPLIED_AT, $repliedAt['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(SupportTicketTableMap::REPLIED_AT, $repliedAt, $comparison);
     }
 
     /**

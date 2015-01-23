@@ -45,6 +45,7 @@ class SupportTicket extends BaseLoop implements PropelSearchLoopInterface
                 ->set("SUBJECT", $entry->getSubject())
                 ->set("MESSAGE", $entry->getMessage())
                 ->set("RESPONSE", $entry->getResponse())
+                ->set("REPLIED_AT", $entry->getRepliedAt())
                 ->set("COMMENT", $entry->getComment())
             ;
 
@@ -84,7 +85,7 @@ class SupportTicket extends BaseLoop implements PropelSearchLoopInterface
     {
         return new ArgumentCollection(
             Argument::createIntListTypeArgument("id"),
-            Argument::createBooleanOrBothTypeArgument("status", BooleanOrBothType::ANY),
+            Argument::createIntListTypeArgument("status"),
             Argument::createIntListTypeArgument("customer_id"),
             Argument::createIntListTypeArgument("admin_id"),
             Argument::createIntListTypeArgument("order_id"),
@@ -132,7 +133,7 @@ class SupportTicket extends BaseLoop implements PropelSearchLoopInterface
             $query->filterById($id);
         }
 
-        if (BooleanOrBothType::ANY !== $status = $this->getStatus()) {
+        if (null !== $status = $this->getStatus()) {
             $query->filterByStatus($status);
         }
 

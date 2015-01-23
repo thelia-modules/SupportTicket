@@ -33,7 +33,10 @@
         {/loop}
     {/loop}
 
-    <div class="support-ticket-new">
+    <div class="support-ticket-new well">
+
+        <button id="support-product-form-trigger" class="btn btn-default">{intl l="New question" d="supportticket.fo.default"}</button>
+        <br>
 
         {form name="support_ticket.front.create"}
             <form id="support-product-form" method="post" action="{url path="/module/SupportTicket/create"}" {form_enctype form=$form}>
@@ -92,12 +95,19 @@
 
     </div>
 
+    {flash type="supportticket-message"}
+        {* Display error message if exist *}
+        <div class="alert alert-info">
+            {$MESSAGE}
+        </div>
+    {/flash}
+
     {ifloop rel="support-ticket"}
-    <div class="support-ticket-list">
-        {loop name="support-ticket" type="support-ticket" customer="$customer_id" order="id-reverse" }
-        <div class="support-ticket-item">
+    <div class="support-ticket-list list-group">
+        {loop name="support-ticket" type="support-ticket" customer="$customer_id" status="0,1" order="id-reverse" }
+        <div class="support-ticket-item list-group-item">
             <h4>{$SUBJECT}</h4>
-            <p class="text-muted">
+            <p>
                 {intl l="on %date" d="supportticket.fo.default" date={format_date date=$UPDATE_DATE output="date"} }
                 {if $ORDER_ID}
                     {intl l=", order: " d="supportticket.fo.default"}
@@ -105,15 +115,30 @@
                 {/if}
                 {if $ORDER_PRODUCT_ID}
                     {intl l=", product: " d="supportticket.fo.default"}
-                    {loop name="order_product" type="order_product" id=$ORDER_PRODUCT_ID limit="1"}{$TITLE} ({$REF}){/loop}
+                    {loop name="order_product" type="order_product" order=$ORDER_ID id=$ORDER_PRODUCT_ID limit="1"}{$TITLE} ({$REF}){/loop}
                 {/if}
+                <br/>
+                <a href="{url path="/module/SupportTicket/delete/$ID"}">
+                    {intl l="Delete this question" d="supportticket.fo.default"}</a>
             </p>
-            <p class="suport-ticket-item-message">
-                {$MESSAGE}
-            </p>
-            <p class="suport-ticket-item-response">
-                {$RESPONSE nofilter}
-            </p>
+
+            <div class="row">
+                <div class="suport-ticket-item-message alert alert-success col-md-8 col-md-offset-1">
+                    <p>
+                        {$MESSAGE}
+                    </p>
+                </div>
+                {if $RESPONSE}
+                <div class="suport-ticket-item-response alert alert-info col-md-8 col-md-offset-3">
+                    <p>
+                        {intl l="replied on %date" d="supportticket.fo.default" date={format_date date=$REPLIED_AT output="date"} }
+                    </p>
+                    <p>
+                        {$RESPONSE}
+                    </p>
+                </div>
+                {/if}
+            </div>
         </div>
         {/loop}
     </div>
@@ -141,10 +166,17 @@
         var $order = $('#support-order-id'),
             $productContainer = $('#support-product-container'),
             $product = $('#support-product-id'),
+            $formTrigger =  $('#support-product-form-trigger')
             $form =  $('#support-product-form')
         ;
 
         $productContainer.hide();
+        $form.hide();
+
+        $formTrigger.on('click', function() {
+            $form.show();
+            $formTrigger.hide();
+        });
 
         $order.on('change', function(ev){
             var $order = $(this),
@@ -158,7 +190,7 @@
                 $product.find('option').each(function(){
                     var $option = $(this);
 
-                    if ($option.data("order") != orderId) {
+                    if ($option.attr('value') != '' && $option.data("order") != orderId) {
                         $option.css('display', "none");
                     } else {
                         $option.css('display', "");
@@ -182,12 +214,12 @@
             }).done(function(data, textStatus, jqXHR){
                 var status;
                 if (data.success) {
-                    //alert(data.message);
+                    document.location.reload();
                 } else {
-                    alert(data.message);
+                    bootbox.alert(data.message);
                 }
             }).fail(function(jqXHR, textStatus, errorThrown){
-                alert(textStatus);
+                bootbox.alert(textStatus);
             });
 
         });

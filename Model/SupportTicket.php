@@ -16,6 +16,5 @@ class SupportTicket extends BaseSupportTicket
 {
     const STATUS_NEW = 0;
     const STATUS_REPLIED = 1;
-
-
+    const STATUS_CLOSED = 2;
 }

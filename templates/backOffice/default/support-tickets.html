@@ -29,7 +29,7 @@
 
                         {loop name="auth-create" type="auth" role="ADMIN" resource="admin.module" access="CREATE" module="SupportTicket"}
                             <div class="pull-right">
-                                <a class="btn btn-default btn-primary" title="{intl l='Create a new SupportTicket entry' d='supportticket.bo.default'}" data-target="#support_ticket-create" data-toggle="modal">
+                                <a class="btn btn-default btn-primary" title="{intl l='Create a new support ticket entry' d='supportticket.bo.default'}" data-target="#support_ticket-create" data-toggle="modal">
                                     <i class="glyphicon glyphicon-plus-sign"></i>
                                 </a>
                             </div>
@@ -115,6 +115,7 @@
                             </td>
                             <td>
                                 {$STATUS_TEXT}
+                                {if $REPLIED_AT}<br><i title="{intl l='Replied on ' }">{format_date date=$REPLIED_AT}</i>{/if}
                             </td>
                             <td>
                                 {loop type="customer" name="customer" id={$CUSTOMER_ID} current="no" backend_context="1"}
@@ -154,12 +155,12 @@
                             <td>
                                 <div class="btn-group">
                                     {loop name="auth-edit" type="auth" role="ADMIN" resource="admin.module" access="UPDATE" module="SupportTicket"}
-                                        <a class="btn btn-default btn-xs" title="{intl l='Edit this SupportTicket' d='supportticket.bo.default'}"  href="{url path='/admin/module/SupportTicket/support_ticket/edit' support_ticket_id=$ID}">
+                                        <a class="btn btn-default btn-xs" title="{intl l='Edit this support ticket' d='supportticket.bo.default'}"  href="{url path='/admin/module/SupportTicket/support_ticket/edit' support_ticket_id=$ID}">
                                             <i class="glyphicon glyphicon-edit"></i>
                                         </a>
                                     {/loop}
                                     {loop name="auth-delete" type="auth" role="ADMIN" resource="admin.module" access="DELETE" module="SupportTicket"}
-                                        <a class="btn btn-default btn-xs support_ticket-delete" title="{intl l='Delete this SupportTicket' d='supportticket.bo.default'}" data-target="#support_ticket-delete" data-toggle="modal" data-id="{$ID}">
+                                        <a class="btn btn-default btn-xs support_ticket-delete" title="{intl l='Delete this support ticket' d='supportticket.bo.default'}" data-target="#support_ticket-delete" data-toggle="modal" data-id="{$ID}">
                                             <i class="glyphicon glyphicon-trash"></i>
                                         </a>
                                     {/loop}
@@ -171,7 +172,7 @@
                         <tr>
                             <td colspan="1000">
                                 <div class="alert alert-info">
-                                    {intl l="There is no SupportTicket" d="supportticket.bo.default"}
+                                    {intl l="There is no support ticket" d="supportticket.bo.default"}
                                 </div>
                             </td>
                         </tr>
@@ -218,7 +219,7 @@
 
                 {form_error form=$form field="status"}{$message}{/form_error}
 
-                <input type="checkbox" name="{$name}" id="{$label_attr.for}" {if $STATUS}checked{/if} {form_field_attributes form=$form field="status"} placeholder="{intl l='The SupportTicket status'}" />
+                <input type="checkbox" name="{$name}" id="{$label_attr.for}" {if $STATUS}checked{/if} {form_field_attributes form=$form field="status"} placeholder="{intl l='The support ticket status'}" />
             </div>
         {/form_field}
         {form_field form=$form field="customer_id"}
@@ -230,7 +231,7 @@
 
                 {form_error form=$form field="customer_id"}{$message}{/form_error}
 
-                <input type="integer" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$CUSTOMER_ID}" {form_field_attributes form=$form field="customer_id"} placeholder="{intl l='The SupportTicket customer_id'}" />
+                <input type="integer" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$CUSTOMER_ID}" {form_field_attributes form=$form field="customer_id"} placeholder="{intl l='The support ticket customer_id'}" />
             </div>
         {/form_field}
         {form_field form=$form field="admin_id"}
@@ -242,7 +243,7 @@
 
                 {form_error form=$form field="admin_id"}{$message}{/form_error}
 
-                <input type="integer" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$ADMIN_ID}" {form_field_attributes form=$form field="admin_id"} placeholder="{intl l='The SupportTicket admin_id'}" />
+                <input type="integer" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$ADMIN_ID}" {form_field_attributes form=$form field="admin_id"} placeholder="{intl l='The support ticket admin_id'}" />
             </div>
         {/form_field}
         {form_field form=$form field="order_id"}
@@ -254,7 +255,7 @@
 
                 {form_error form=$form field="order_id"}{$message}{/form_error}
 
-                <input type="integer" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$ORDER_ID}" {form_field_attributes form=$form field="order_id"} placeholder="{intl l='The SupportTicket order_id'}" />
+                <input type="integer" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$ORDER_ID}" {form_field_attributes form=$form field="order_id"} placeholder="{intl l='The support ticket order_id'}" />
             </div>
         {/form_field}
         {form_field form=$form field="order_product_id"}
@@ -266,7 +267,7 @@
 
                 {form_error form=$form field="order_product_id"}{$message}{/form_error}
 
-                <input type="integer" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$ORDER_PRODUCT_ID}" {form_field_attributes form=$form field="order_product_id"} placeholder="{intl l='The SupportTicket order_product_id'}" />
+                <input type="integer" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$ORDER_PRODUCT_ID}" {form_field_attributes form=$form field="order_product_id"} placeholder="{intl l='The support ticket order_product_id'}" />
             </div>
         {/form_field}
         {form_field form=$form field="subject"}
@@ -278,7 +279,7 @@
 
                 {form_error form=$form field="subject"}{$message}{/form_error}
 
-                <input type="text" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$SUBJECT}" {form_field_attributes form=$form field="subject"} placeholder="{intl l='The SupportTicket subject'}" />
+                <input type="text" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$SUBJECT}" {form_field_attributes form=$form field="subject"} placeholder="{intl l='The support ticket subject'}" />
             </div>
         {/form_field}
         {form_field form=$form field="message"}
@@ -290,7 +291,7 @@
 
                 {form_error form=$form field="message"}{$message}{/form_error}
 
-                <textarea class="form-control" name="{$name}" id="{$label_attr.for}"{form_field_attributes form=$form field="message"} placeholder="{intl l='The SupportTicket message'}">{$MESSAGE}</textarea>
+                <textarea class="form-control" name="{$name}" id="{$label_attr.for}"{form_field_attributes form=$form field="message"} placeholder="{intl l='The support ticket message'}">{$MESSAGE}</textarea>
             </div>
         {/form_field}
         {form_field form=$form field="response"}
@@ -302,7 +303,7 @@
 
                 {form_error form=$form field="response"}{$message}{/form_error}
 
-                <textarea class="form-control" name="{$name}" id="{$label_attr.for}"{form_field_attributes form=$form field="response"} placeholder="{intl l='The SupportTicket response'}">{$RESPONSE}</textarea>
+                <textarea class="form-control" name="{$name}" id="{$label_attr.for}"{form_field_attributes form=$form field="response"} placeholder="{intl l='The support ticket response'}">{$RESPONSE}</textarea>
             </div>
         {/form_field}
         {form_field form=$form field="comment"}
@@ -314,7 +315,7 @@
 
                 {form_error form=$form field="comment"}{$message}{/form_error}
 
-                <textarea class="form-control" name="{$name}" id="{$label_attr.for}"{form_field_attributes form=$form field="comment"} placeholder="{intl l='The SupportTicket comment'}">{$COMMENT}</textarea>
+                <textarea class="form-control" name="{$name}" id="{$label_attr.for}"{form_field_attributes form=$form field="comment"} placeholder="{intl l='The support ticket comment'}">{$COMMENT}</textarea>
             </div>
         {/form_field}
     {/capture}
@@ -323,7 +324,7 @@
 
 
         dialog_id       = "support_ticket-create"
-        dialog_title    = {intl l="Create an entry of SupportTicket" d="supportticket.bo.default"}
+        dialog_title    = {intl l="Create an entry of support ticket" d="supportticket.bo.default"}
         dialog_body     = {$smarty.capture.support_ticket_create nofilter}
 
         dialog_ok_label     = {intl l="Create"}
@@ -338,14 +339,14 @@
     {* DELETE modal *}
 
     {capture "support_ticket_delete"}
-        {intl l="Do you really want to delete this SupportTicket entry ?" d="supportticket.bo.default"}
+        {intl l="Do you really want to delete this support ticket entry ?" d="supportticket.bo.default"}
         <input type="hidden" name="support_ticket_id" id="support_ticket_delete_id" value="" />
     {/capture}
 
     {include file="includes/generic-confirm-dialog.html"
 
         dialog_id       = "support_ticket-delete"
-        dialog_title    = {intl l="Delete an entry of SupportTicket" d="supportticket.bo.default"}
+        dialog_title    = {intl l="Delete an entry of support ticket" d="supportticket.bo.default"}
         dialog_message  = {$smarty.capture.support_ticket_delete nofilter}
 
         dialog_ok_label     = {intl l="Delete"}

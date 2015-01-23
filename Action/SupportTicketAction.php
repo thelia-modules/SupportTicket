@@ -13,8 +13,10 @@ use Thelia\Core\Template\ParserInterface;
 use Thelia\Log\Tlog;
 use Thelia\Mailer\MailerFactory;
 use Thelia\Model\AdminQuery;
+use Thelia\Model\Base\LangQuery;
 use Thelia\Model\ConfigQuery;
 use Thelia\Model\CustomerQuery;
+use Thelia\Model\Lang;
 use Thelia\Model\MessageQuery;
 
 /**
@@ -50,6 +52,11 @@ class SupportTicketAction extends BaseSupportTicketAction
 
         if ($model->getStatus() === SupportTicket::STATUS_NEW) {
             $sendEmail = true;
+        } elseif ($model->getStatus() === SupportTicket::STATUS_REPLIED) {
+            // deactivate the date, already set
+            $event->setRepliedAt(null);
+        } else {
+            $event->setStatus(null);
         }
 
         parent::update($event);
@@ -70,8 +77,7 @@ class SupportTicketAction extends BaseSupportTicketAction
             $emailTo = $customer->getEmail();
         } else {
             $emailTemplate = 'supportticket_administrator';
-            $administrator = AdminQuery::create()->findPk($supportTicket->getAdminId());
-            $locale = $administrator->getLocale();
+            $locale = Lang::getDefaultLanguage()->getLocale();
             $emailTo = $contactEmail;
         }
 

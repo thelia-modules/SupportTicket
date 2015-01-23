@@ -118,6 +118,12 @@ abstract class SupportTicket implements ActiveRecordInterface
     protected $response;
 
     /**
+     * The value for the replied_at field.
+     * @var        string
+     */
+    protected $replied_at;
+
+    /**
      * The value for the comment field.
      * @var        string
      */
@@ -534,6 +540,26 @@ abstract class SupportTicket implements ActiveRecordInterface
     }
 
     /**
+     * Get the [optionally formatted] temporal [replied_at] column value.
+     *
+     *
+     * @param      string $format The date/time format string (either date()-style or strftime()-style).
+     *                            If format is NULL, then the raw \DateTime object will be returned.
+     *
+     * @return mixed Formatted date/time value as string or \DateTime object (if format is NULL), NULL if column is NULL, and 0 if column value is 0000-00-00 00:00:00
+     *
+     * @throws PropelException - if unable to parse/validate the date/time value.
+     */
+    public function getRepliedAt($format = NULL)
+    {
+        if ($format === null) {
+            return $this->replied_at;
+        } else {
+            return $this->replied_at instanceof \DateTime ? $this->replied_at->format($format) : null;
+        }
+    }
+
+    /**
      * Get the [comment] column value.
      *
      * @return   string
@@ -790,6 +816,27 @@ abstract class SupportTicket implements ActiveRecordInterface
     } // setResponse()
 
     /**
+     * Sets the value of [replied_at] column to a normalized version of the date/time value specified.
+     *
+     * @param      mixed $v string, integer (timestamp), or \DateTime value.
+     *               Empty strings are treated as NULL.
+     * @return   \SupportTicket\Model\SupportTicket The current object (for fluent API support)
+     */
+    public function setRepliedAt($v)
+    {
+        $dt = PropelDateTime::newInstance($v, null, '\DateTime');
+        if ($this->replied_at !== null || $dt !== null) {
+            if ($dt !== $this->replied_at) {
+                $this->replied_at = $dt;
+                $this->modifiedColumns[SupportTicketTableMap::REPLIED_AT] = true;
+            }
+        } // if either are not null
+
+
+        return $this;
+    } // setRepliedAt()
+
+    /**
      * Set the value of [comment] column.
      *
      * @param      string $v new value
@@ -920,16 +967,22 @@ abstract class SupportTicket implements ActiveRecordInterface
             $col = $row[TableMap::TYPE_NUM == $indexType ? 8 + $startcol : SupportTicketTableMap::translateFieldName('Response', TableMap::TYPE_PHPNAME, $indexType)];
             $this->response = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : SupportTicketTableMap::translateFieldName('Comment', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 9 + $startcol : SupportTicketTableMap::translateFieldName('RepliedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            if ($col === '0000-00-00 00:00:00') {
+                $col = null;
+            }
+            $this->replied_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
+
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : SupportTicketTableMap::translateFieldName('Comment', TableMap::TYPE_PHPNAME, $indexType)];
             $this->comment = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 10 + $startcol : SupportTicketTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : SupportTicketTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 11 + $startcol : SupportTicketTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 12 + $startcol : SupportTicketTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             if ($col === '0000-00-00 00:00:00') {
                 $col = null;
             }
@@ -942,7 +995,7 @@ abstract class SupportTicket implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 12; // 12 = SupportTicketTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 13; // 13 = SupportTicketTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating \SupportTicket\Model\SupportTicket object", 0, $e);
@@ -1238,6 +1291,9 @@ abstract class SupportTicket implements ActiveRecordInterface
         if ($this->isColumnModified(SupportTicketTableMap::RESPONSE)) {
             $modifiedColumns[':p' . $index++]  = 'RESPONSE';
         }
+        if ($this->isColumnModified(SupportTicketTableMap::REPLIED_AT)) {
+            $modifiedColumns[':p' . $index++]  = 'REPLIED_AT';
+        }
         if ($this->isColumnModified(SupportTicketTableMap::COMMENT)) {
             $modifiedColumns[':p' . $index++]  = 'COMMENT';
         }
@@ -1284,6 +1340,9 @@ abstract class SupportTicket implements ActiveRecordInterface
                         break;
                     case 'RESPONSE':
                         $stmt->bindValue($identifier, $this->response, PDO::PARAM_STR);
+                        break;
+                    case 'REPLIED_AT':
+                        $stmt->bindValue($identifier, $this->replied_at ? $this->replied_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
                         break;
                     case 'COMMENT':
                         $stmt->bindValue($identifier, $this->comment, PDO::PARAM_STR);
@@ -1384,12 +1443,15 @@ abstract class SupportTicket implements ActiveRecordInterface
                 return $this->getResponse();
                 break;
             case 9:
-                return $this->getComment();
+                return $this->getRepliedAt();
                 break;
             case 10:
-                return $this->getCreatedAt();
+                return $this->getComment();
                 break;
             case 11:
+                return $this->getCreatedAt();
+                break;
+            case 12:
                 return $this->getUpdatedAt();
                 break;
             default:
@@ -1430,9 +1492,10 @@ abstract class SupportTicket implements ActiveRecordInterface
             $keys[6] => $this->getSubject(),
             $keys[7] => $this->getMessage(),
             $keys[8] => $this->getResponse(),
-            $keys[9] => $this->getComment(),
-            $keys[10] => $this->getCreatedAt(),
-            $keys[11] => $this->getUpdatedAt(),
+            $keys[9] => $this->getRepliedAt(),
+            $keys[10] => $this->getComment(),
+            $keys[11] => $this->getCreatedAt(),
+            $keys[12] => $this->getUpdatedAt(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1514,12 +1577,15 @@ abstract class SupportTicket implements ActiveRecordInterface
                 $this->setResponse($value);
                 break;
             case 9:
-                $this->setComment($value);
+                $this->setRepliedAt($value);
                 break;
             case 10:
-                $this->setCreatedAt($value);
+                $this->setComment($value);
                 break;
             case 11:
+                $this->setCreatedAt($value);
+                break;
+            case 12:
                 $this->setUpdatedAt($value);
                 break;
         } // switch()
@@ -1555,9 +1621,10 @@ abstract class SupportTicket implements ActiveRecordInterface
         if (array_key_exists($keys[6], $arr)) $this->setSubject($arr[$keys[6]]);
         if (array_key_exists($keys[7], $arr)) $this->setMessage($arr[$keys[7]]);
         if (array_key_exists($keys[8], $arr)) $this->setResponse($arr[$keys[8]]);
-        if (array_key_exists($keys[9], $arr)) $this->setComment($arr[$keys[9]]);
-        if (array_key_exists($keys[10], $arr)) $this->setCreatedAt($arr[$keys[10]]);
-        if (array_key_exists($keys[11], $arr)) $this->setUpdatedAt($arr[$keys[11]]);
+        if (array_key_exists($keys[9], $arr)) $this->setRepliedAt($arr[$keys[9]]);
+        if (array_key_exists($keys[10], $arr)) $this->setComment($arr[$keys[10]]);
+        if (array_key_exists($keys[11], $arr)) $this->setCreatedAt($arr[$keys[11]]);
+        if (array_key_exists($keys[12], $arr)) $this->setUpdatedAt($arr[$keys[12]]);
     }
 
     /**
@@ -1578,6 +1645,7 @@ abstract class SupportTicket implements ActiveRecordInterface
         if ($this->isColumnModified(SupportTicketTableMap::SUBJECT)) $criteria->add(SupportTicketTableMap::SUBJECT, $this->subject);
         if ($this->isColumnModified(SupportTicketTableMap::MESSAGE)) $criteria->add(SupportTicketTableMap::MESSAGE, $this->message);
         if ($this->isColumnModified(SupportTicketTableMap::RESPONSE)) $criteria->add(SupportTicketTableMap::RESPONSE, $this->response);
+        if ($this->isColumnModified(SupportTicketTableMap::REPLIED_AT)) $criteria->add(SupportTicketTableMap::REPLIED_AT, $this->replied_at);
         if ($this->isColumnModified(SupportTicketTableMap::COMMENT)) $criteria->add(SupportTicketTableMap::COMMENT, $this->comment);
         if ($this->isColumnModified(SupportTicketTableMap::CREATED_AT)) $criteria->add(SupportTicketTableMap::CREATED_AT, $this->created_at);
         if ($this->isColumnModified(SupportTicketTableMap::UPDATED_AT)) $criteria->add(SupportTicketTableMap::UPDATED_AT, $this->updated_at);
@@ -1652,6 +1720,7 @@ abstract class SupportTicket implements ActiveRecordInterface
         $copyObj->setSubject($this->getSubject());
         $copyObj->setMessage($this->getMessage());
         $copyObj->setResponse($this->getResponse());
+        $copyObj->setRepliedAt($this->getRepliedAt());
         $copyObj->setComment($this->getComment());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setUpdatedAt($this->getUpdatedAt());
@@ -1901,6 +1970,7 @@ abstract class SupportTicket implements ActiveRecordInterface
         $this->subject = null;
         $this->message = null;
         $this->response = null;
+        $this->replied_at = null;
         $this->comment = null;
         $this->created_at = null;
         $this->updated_at = null;

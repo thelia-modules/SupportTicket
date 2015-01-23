@@ -13,7 +13,7 @@
         <column name="subject" size="255" type="VARCHAR" />
         <column name="message" type="CLOB" />
         <column name="response" type="CLOB" />
-        <column name="replied_at" type="DATETIME" required="false" />
+        <column name="replied_at" type="TIMESTAMP" required="false" />
         <column name="comment" type="CLOB" />
 
         <foreign-key foreignTable="customer" name="fk_support_ticket_customer_id" onDelete="CASCADE" onUpdate="RESTRICT">

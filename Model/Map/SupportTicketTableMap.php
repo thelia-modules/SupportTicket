@@ -58,7 +58,7 @@ class SupportTicketTableMap extends TableMap
     /**
      * The total number of columns
      */
-    const NUM_COLUMNS = 12;
+    const NUM_COLUMNS = 13;
 
     /**
      * The number of lazy-loaded columns
@@ -68,7 +68,7 @@ class SupportTicketTableMap extends TableMap
     /**
      * The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS)
      */
-    const NUM_HYDRATE_COLUMNS = 12;
+    const NUM_HYDRATE_COLUMNS = 13;
 
     /**
      * the column name for the ID field
@@ -116,6 +116,11 @@ class SupportTicketTableMap extends TableMap
     const RESPONSE = 'support_ticket.RESPONSE';
 
     /**
+     * the column name for the REPLIED_AT field
+     */
+    const REPLIED_AT = 'support_ticket.REPLIED_AT';
+
+    /**
      * the column name for the COMMENT field
      */
     const COMMENT = 'support_ticket.COMMENT';
@@ -142,12 +147,12 @@ class SupportTicketTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Status', 'CustomerId', 'AdminId', 'OrderId', 'OrderProductId', 'Subject', 'Message', 'Response', 'Comment', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'status', 'customerId', 'adminId', 'orderId', 'orderProductId', 'subject', 'message', 'response', 'comment', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(SupportTicketTableMap::ID, SupportTicketTableMap::STATUS, SupportTicketTableMap::CUSTOMER_ID, SupportTicketTableMap::ADMIN_ID, SupportTicketTableMap::ORDER_ID, SupportTicketTableMap::ORDER_PRODUCT_ID, SupportTicketTableMap::SUBJECT, SupportTicketTableMap::MESSAGE, SupportTicketTableMap::RESPONSE, SupportTicketTableMap::COMMENT, SupportTicketTableMap::CREATED_AT, SupportTicketTableMap::UPDATED_AT, ),
-        self::TYPE_RAW_COLNAME   => array('ID', 'STATUS', 'CUSTOMER_ID', 'ADMIN_ID', 'ORDER_ID', 'ORDER_PRODUCT_ID', 'SUBJECT', 'MESSAGE', 'RESPONSE', 'COMMENT', 'CREATED_AT', 'UPDATED_AT', ),
-        self::TYPE_FIELDNAME     => array('id', 'status', 'customer_id', 'admin_id', 'order_id', 'order_product_id', 'subject', 'message', 'response', 'comment', 'created_at', 'updated_at', ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
+        self::TYPE_PHPNAME       => array('Id', 'Status', 'CustomerId', 'AdminId', 'OrderId', 'OrderProductId', 'Subject', 'Message', 'Response', 'RepliedAt', 'Comment', 'CreatedAt', 'UpdatedAt', ),
+        self::TYPE_STUDLYPHPNAME => array('id', 'status', 'customerId', 'adminId', 'orderId', 'orderProductId', 'subject', 'message', 'response', 'repliedAt', 'comment', 'createdAt', 'updatedAt', ),
+        self::TYPE_COLNAME       => array(SupportTicketTableMap::ID, SupportTicketTableMap::STATUS, SupportTicketTableMap::CUSTOMER_ID, SupportTicketTableMap::ADMIN_ID, SupportTicketTableMap::ORDER_ID, SupportTicketTableMap::ORDER_PRODUCT_ID, SupportTicketTableMap::SUBJECT, SupportTicketTableMap::MESSAGE, SupportTicketTableMap::RESPONSE, SupportTicketTableMap::REPLIED_AT, SupportTicketTableMap::COMMENT, SupportTicketTableMap::CREATED_AT, SupportTicketTableMap::UPDATED_AT, ),
+        self::TYPE_RAW_COLNAME   => array('ID', 'STATUS', 'CUSTOMER_ID', 'ADMIN_ID', 'ORDER_ID', 'ORDER_PRODUCT_ID', 'SUBJECT', 'MESSAGE', 'RESPONSE', 'REPLIED_AT', 'COMMENT', 'CREATED_AT', 'UPDATED_AT', ),
+        self::TYPE_FIELDNAME     => array('id', 'status', 'customer_id', 'admin_id', 'order_id', 'order_product_id', 'subject', 'message', 'response', 'replied_at', 'comment', 'created_at', 'updated_at', ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
     );
 
     /**
@@ -157,12 +162,12 @@ class SupportTicketTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Status' => 1, 'CustomerId' => 2, 'AdminId' => 3, 'OrderId' => 4, 'OrderProductId' => 5, 'Subject' => 6, 'Message' => 7, 'Response' => 8, 'Comment' => 9, 'CreatedAt' => 10, 'UpdatedAt' => 11, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'status' => 1, 'customerId' => 2, 'adminId' => 3, 'orderId' => 4, 'orderProductId' => 5, 'subject' => 6, 'message' => 7, 'response' => 8, 'comment' => 9, 'createdAt' => 10, 'updatedAt' => 11, ),
-        self::TYPE_COLNAME       => array(SupportTicketTableMap::ID => 0, SupportTicketTableMap::STATUS => 1, SupportTicketTableMap::CUSTOMER_ID => 2, SupportTicketTableMap::ADMIN_ID => 3, SupportTicketTableMap::ORDER_ID => 4, SupportTicketTableMap::ORDER_PRODUCT_ID => 5, SupportTicketTableMap::SUBJECT => 6, SupportTicketTableMap::MESSAGE => 7, SupportTicketTableMap::RESPONSE => 8, SupportTicketTableMap::COMMENT => 9, SupportTicketTableMap::CREATED_AT => 10, SupportTicketTableMap::UPDATED_AT => 11, ),
-        self::TYPE_RAW_COLNAME   => array('ID' => 0, 'STATUS' => 1, 'CUSTOMER_ID' => 2, 'ADMIN_ID' => 3, 'ORDER_ID' => 4, 'ORDER_PRODUCT_ID' => 5, 'SUBJECT' => 6, 'MESSAGE' => 7, 'RESPONSE' => 8, 'COMMENT' => 9, 'CREATED_AT' => 10, 'UPDATED_AT' => 11, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'status' => 1, 'customer_id' => 2, 'admin_id' => 3, 'order_id' => 4, 'order_product_id' => 5, 'subject' => 6, 'message' => 7, 'response' => 8, 'comment' => 9, 'created_at' => 10, 'updated_at' => 11, ),
-        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Status' => 1, 'CustomerId' => 2, 'AdminId' => 3, 'OrderId' => 4, 'OrderProductId' => 5, 'Subject' => 6, 'Message' => 7, 'Response' => 8, 'RepliedAt' => 9, 'Comment' => 10, 'CreatedAt' => 11, 'UpdatedAt' => 12, ),
+        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'status' => 1, 'customerId' => 2, 'adminId' => 3, 'orderId' => 4, 'orderProductId' => 5, 'subject' => 6, 'message' => 7, 'response' => 8, 'repliedAt' => 9, 'comment' => 10, 'createdAt' => 11, 'updatedAt' => 12, ),
+        self::TYPE_COLNAME       => array(SupportTicketTableMap::ID => 0, SupportTicketTableMap::STATUS => 1, SupportTicketTableMap::CUSTOMER_ID => 2, SupportTicketTableMap::ADMIN_ID => 3, SupportTicketTableMap::ORDER_ID => 4, SupportTicketTableMap::ORDER_PRODUCT_ID => 5, SupportTicketTableMap::SUBJECT => 6, SupportTicketTableMap::MESSAGE => 7, SupportTicketTableMap::RESPONSE => 8, SupportTicketTableMap::REPLIED_AT => 9, SupportTicketTableMap::COMMENT => 10, SupportTicketTableMap::CREATED_AT => 11, SupportTicketTableMap::UPDATED_AT => 12, ),
+        self::TYPE_RAW_COLNAME   => array('ID' => 0, 'STATUS' => 1, 'CUSTOMER_ID' => 2, 'ADMIN_ID' => 3, 'ORDER_ID' => 4, 'ORDER_PRODUCT_ID' => 5, 'SUBJECT' => 6, 'MESSAGE' => 7, 'RESPONSE' => 8, 'REPLIED_AT' => 9, 'COMMENT' => 10, 'CREATED_AT' => 11, 'UPDATED_AT' => 12, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'status' => 1, 'customer_id' => 2, 'admin_id' => 3, 'order_id' => 4, 'order_product_id' => 5, 'subject' => 6, 'message' => 7, 'response' => 8, 'replied_at' => 9, 'comment' => 10, 'created_at' => 11, 'updated_at' => 12, ),
+        self::TYPE_NUM           => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
     );
 
     /**
@@ -190,6 +195,7 @@ class SupportTicketTableMap extends TableMap
         $this->addColumn('SUBJECT', 'Subject', 'VARCHAR', false, 255, null);
         $this->addColumn('MESSAGE', 'Message', 'CLOB', false, null, null);
         $this->addColumn('RESPONSE', 'Response', 'CLOB', false, null, null);
+        $this->addColumn('REPLIED_AT', 'RepliedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('COMMENT', 'Comment', 'CLOB', false, null, null);
         $this->addColumn('CREATED_AT', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('UPDATED_AT', 'UpdatedAt', 'TIMESTAMP', false, null, null);
@@ -366,6 +372,7 @@ class SupportTicketTableMap extends TableMap
             $criteria->addSelectColumn(SupportTicketTableMap::SUBJECT);
             $criteria->addSelectColumn(SupportTicketTableMap::MESSAGE);
             $criteria->addSelectColumn(SupportTicketTableMap::RESPONSE);
+            $criteria->addSelectColumn(SupportTicketTableMap::REPLIED_AT);
             $criteria->addSelectColumn(SupportTicketTableMap::COMMENT);
             $criteria->addSelectColumn(SupportTicketTableMap::CREATED_AT);
             $criteria->addSelectColumn(SupportTicketTableMap::UPDATED_AT);
@@ -379,6 +386,7 @@ class SupportTicketTableMap extends TableMap
             $criteria->addSelectColumn($alias . '.SUBJECT');
             $criteria->addSelectColumn($alias . '.MESSAGE');
             $criteria->addSelectColumn($alias . '.RESPONSE');
+            $criteria->addSelectColumn($alias . '.REPLIED_AT');
             $criteria->addSelectColumn($alias . '.COMMENT');
             $criteria->addSelectColumn($alias . '.CREATED_AT');
             $criteria->addSelectColumn($alias . '.UPDATED_AT');

@@ -8,8 +8,9 @@
   <route id="supportticket.front.support_ticket.create" path="/module/SupportTicket/create" methods="post">
     <default key="_controller">SupportTicket:Front:create</default>
   </route>
-  <route id="supportticket.front.support_ticket.delete" path="/module/SupportTicket/delete" methods="post">
+  <route id="supportticket.front.support_ticket.delete" path="/module/SupportTicket/delete/{supportTicketId}" methods="get">
     <default key="_controller">SupportTicket:Front:delete</default>
+    <requirement key="supportTicketId">\d+</requirement>
   </route>
 
 

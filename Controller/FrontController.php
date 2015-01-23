@@ -16,7 +16,9 @@ namespace SupportTicket\Controller;
 use SupportTicket\Event\SupportTicketEvent;
 use SupportTicket\Event\SupportTicketEvents;
 use SupportTicket\Model\SupportTicket;
+use SupportTicket\Model\SupportTicketQuery;
 use Thelia\Controller\Front\BaseFrontController;
+use Thelia\Core\Translation\Translator;
 use Thelia\Form\Exception\FormValidationException;
 
 /**
@@ -26,8 +28,19 @@ use Thelia\Form\Exception\FormValidationException;
  */
 class FrontController extends BaseFrontController
 {
-
     protected $useFallbackTemplate = true;
+
+    /** @var Translator $translator */
+    protected $translator;
+
+    protected function trans($id, $parameters = [])
+    {
+        if (null === $this->translator) {
+            $this->translator = Translator::getInstance();
+        }
+
+        return $this->translator->trans($id, $parameters, \SupportTicket\SupportTicket::MESSAGE_DOMAIN);
+    }
 
     public function defaultAction()
     {
@@ -58,7 +71,6 @@ class FrontController extends BaseFrontController
 
             $this->dispatch(SupportTicketEvents::CREATE, $event);
 
-            // todo save or dispatch an event
             $responseData['success'] = true;
             $responseData['message'] = 'ok';
         } catch (FormValidationException $e) {
@@ -70,8 +82,36 @@ class FrontController extends BaseFrontController
         return $this->jsonResponse(json_encode($responseData));
     }
 
-    public function deleteAction()
+    public function deleteAction($supportTicketId)
     {
+        $this->checkAuth();
+
+        $supportTicket = SupportTicketQuery::create()->findPk($supportTicketId);
+        $customerId = $this->getSecurityContext()->getCustomerUser()->getId();
+
+        if (null !== $supportTicket && $supportTicket->getCustomerId() == $customerId) {
+
+            $event = new SupportTicketEvent();
+            $event
+                ->setId($supportTicketId)
+                ->setStatus(SupportTicket::STATUS_CLOSED)
+            ;
+            $this->dispatch(SupportTicketEvents::UPDATE, $event);
+
+            $this->getSession()->getFlashBag()
+                ->add(
+                    'supportticket-message',
+                    $this->trans('Your question has been deleted')
+                );
+        } else {
+            $this->getSession()->getFlashBag()
+                ->add(
+                    'supportticket-message',
+                    $this->trans("Sorry, this question can't be deleted.")
+                );
+        }
+
+        return $this->generateRedirect('/module/SupportTicket/support');
 
     }
 }

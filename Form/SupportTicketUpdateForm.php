@@ -17,16 +17,16 @@ class SupportTicketUpdateForm extends BaseSupportTicketUpdateForm
     public function getTranslationKeys()
     {
         return array(
-            "id" => "id",
-            "status" => "status",
-            "customer_id" => "customer_id",
-            "admin_id" => "admin_id",
-            "order_id" => "order_id",
-            "order_product_id" => "order_product_id",
-            "subject" => "subject",
-            "message" => "message",
-            "response" => "response",
-            "comment" => "comment",
+            "id" => "id", // ->trans("Id")
+            "status" => "Status", // ->trans("Status")
+            "customer_id" => "Customer id", // ->trans("Customer id")
+            "admin_id" => "Admin id", // ->trans("Admin id")
+            "order_id" => "Order id", // ->trans("Order id")
+            "order_product_id" => "Order product id", // ->trans("Order product id")
+            "subject" => "Subject", // ->trans("Subject")
+            "message" => "Message", // ->trans("Message")
+            "response" => "Response", // ->trans("Response")
+            "comment" => "Comment", // ->trans("Comment")
         );
     }
 

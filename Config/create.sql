@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS `support_ticket`
     `subject` VARCHAR(255),
     `message` LONGTEXT,
     `response` LONGTEXT,
+    `replied_at` DATETIME,
     `comment` LONGTEXT,
     `created_at` DATETIME,
     `updated_at` DATETIME,

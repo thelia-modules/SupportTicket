@@ -40,6 +40,11 @@ class SupportTicket extends BaseSupportTicketLoop
                     "replied",
                     [],
                     \SupportTicket\SupportTicket::MESSAGE_DOMAIN
+                ),
+                SupportTicketModel::STATUS_CLOSED => Translator::getInstance()->trans(
+                    "closed",
+                    [],
+                    \SupportTicket\SupportTicket::MESSAGE_DOMAIN
                 )
             ];
         }

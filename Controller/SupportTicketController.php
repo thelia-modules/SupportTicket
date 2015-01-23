@@ -9,6 +9,7 @@ namespace SupportTicket\Controller;
 use SupportTicket\Controller\Base\SupportTicketController as BaseSupportTicketController;
 use SupportTicket\Event\SupportTicketEvent;
 use SupportTicket\Model\SupportTicket;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Class SupportTicketController
@@ -28,6 +29,7 @@ class SupportTicketController extends BaseSupportTicketController
         $event->setComment($formData["comment"]);
 
         $event->setStatus(SupportTicket::STATUS_REPLIED);
+        $event->setRepliedAt(new \DateTime('now'));
 
         return $event;
     }
