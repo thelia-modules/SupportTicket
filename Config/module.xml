@@ -19,6 +19,9 @@
         <email>jchanseaume@openstudio.fr</email>
     </author>
     <type>classic</type>
+    <required>
+        <module version="&gt;=1.1">TheliaStudio</module>
+    </required>
     <thelia>2.1.0</thelia>
     <stability>alpha</stability>
 </module>
