@@ -13,11 +13,8 @@
 namespace SupportTicket;
 
 use Propel\Runtime\Connection\ConnectionInterface;
-use SupportTicket\Model\SupportTicketQuery;
-use SupportTicket\Model\SupportTicket as SupportTicketModel;
 use Thelia\Core\Translation\Translator;
 use Thelia\Install\Database;
-use Thelia\Model\ConfigQuery;
 use Thelia\Model\LangQuery;
 use Thelia\Model\Message;
 use Thelia\Model\MessageQuery;
@@ -37,7 +34,7 @@ class SupportTicket extends BaseModule
     const DEFAULT_EMAILS = "";
     */
 
-    /** @var Translator  */
+    /** @var Translator */
     protected $translator = null;
 
     public function postActivation(ConnectionInterface $con = null)
@@ -108,7 +105,6 @@ class SupportTicket extends BaseModule
             null,
             [__DIR__ . '/Config/create.sql']
         );
-
     }
 
     /*
@@ -136,6 +132,6 @@ class SupportTicket extends BaseModule
             $this->translator = Translator::getInstance();
         }
 
-        return $this->translator->trans($id, $parameters, StockAlert::MESSAGE_DOMAIN, $locale);
+        return $this->translator->trans($id, $parameters, SupportTicket::MESSAGE_DOMAIN, $locale);
     }
 }
