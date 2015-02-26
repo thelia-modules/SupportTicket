@@ -12,7 +12,6 @@ return array(
     'Order product id' => 'Id Produit',
     'Product' => 'Produit',
     'Response' => 'Réponse',
-    'Sorry, an error occurred: %err' => 'Une erreur a été rencontré',
     'Sorry, this question can\'t be deleted.' => 'Désolé, cette question ne peut pas être supprimée.',
     'Status' => 'Statut',
     'Subject' => 'Sujet',
@@ -24,7 +23,7 @@ return array(
     'The product is not a valid product' => 'Le produit n\'est pas valide',
     'You have an answer to your question' => 'Vous avez une réponse à votre question',
     'Your question has been deleted' => 'Votre question a été supprimé.',
-    'closed' => 'fermée',
-    'new' => 'nouvelle',
-    'replied' => 'répondue',
+    'closed' => 'clôturé',
+    'new' => 'nouveau',
+    'replied' => 'répondu',
 );
