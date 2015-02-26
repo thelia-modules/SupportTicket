@@ -51,7 +51,7 @@ class ManagerHook extends BaseHook
         );
     }
 
-    // id,title,href,content
+    /*
     public function onOrderTab(HookRenderBlockEvent $event)
     {
         $event->add(
@@ -59,8 +59,9 @@ class ManagerHook extends BaseHook
                 'id' => 'support-ticket',
                 'title' => 'Support Ticket',
                 'href' => '#',
-                'content' => 'Tada',
+                'content' => 'Not yet implemented',
             ]
         );
     }
+    */
 }

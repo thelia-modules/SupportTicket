@@ -15,13 +15,13 @@
         <hook id="supportticket.hook" class="SupportTicket\Hook\ManagerHook" scope="request">
             <!-- front -->
             <tag name="hook.event_listener" event="account.additional" />
-            <tag name="hook.event_listener" event="account-order.bottom" />
-            <tag name="hook.event_listener" event="main.javascript-initialization" />
 
             <!-- back -->
             <tag name="hook.event_listener" event="main.top-menu-tools" type="back" />
+            <!--
             <tag name="hook.event_listener" event="order.tab" type="back" />
             <tag name="hook.event_listener" event="customer.edit" type="back" />
+            -->
         </hook>
     </hooks>
 
