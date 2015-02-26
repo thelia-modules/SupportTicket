@@ -33,15 +33,6 @@ class FrontController extends BaseFrontController
     /** @var Translator $translator */
     protected $translator;
 
-    protected function trans($id, $parameters = [])
-    {
-        if (null === $this->translator) {
-            $this->translator = Translator::getInstance();
-        }
-
-        return $this->translator->trans($id, $parameters, \SupportTicket\SupportTicket::MESSAGE_DOMAIN);
-    }
-
     public function defaultAction()
     {
         $this->checkAuth();
@@ -94,8 +85,8 @@ class FrontController extends BaseFrontController
             $event = new SupportTicketEvent();
             $event
                 ->setId($supportTicketId)
-                ->setStatus(SupportTicket::STATUS_CLOSED)
-            ;
+                ->setStatus(SupportTicket::STATUS_CLOSED);
+
             $this->dispatch(SupportTicketEvents::UPDATE, $event);
 
             $this->getSession()->getFlashBag()
@@ -112,6 +103,14 @@ class FrontController extends BaseFrontController
         }
 
         return $this->generateRedirect('/module/SupportTicket/support');
+    }
 
+    protected function trans($id, $parameters = [])
+    {
+        if (null === $this->translator) {
+            $this->translator = Translator::getInstance();
+        }
+
+        return $this->translator->trans($id, $parameters, \SupportTicket\SupportTicket::MESSAGE_DOMAIN);
     }
 }

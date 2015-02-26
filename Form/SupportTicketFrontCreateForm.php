@@ -33,13 +33,35 @@ class SupportTicketFrontCreateForm extends BaseForm
     /** @var Translator $translator */
     protected $translator;
 
-    protected function trans($id, $parameters = [])
+    public function verifyOrder($value, ExecutionContextInterface $context)
     {
-        if (null === $this->translator) {
-            $this->translator = Translator::getInstance();
-        }
+        $data = $context->getRoot()->getData();
 
-        return $this->translator->trans($id, $parameters, SupportTicket::MESSAGE_DOMAIN);
+        if (!empty($data["order_id"])) {
+            $order = OrderQuery::create()->findPk($data["order_id"]);
+            if (null === $order || !$order->isPaid() || $order->getCustomerId() != $data["customer_id"]) {
+                $context->addViolation(
+                    $this->trans("The order is not a valid order")
+                );
+            } else {
+                if (!empty($data["order_product_id"])) {
+                    $orderProduct = OrderProductQuery::create()->findPk($data["order_product_id"]);
+                    if (null === $order || $orderProduct->getOrderId() !== $order->getId()) {
+                        $context->addViolation(
+                            $this->trans("The product is not a valid product")
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @return string the name of you form. This name must be unique
+     */
+    public function getName()
+    {
+        return "supportticket_new";
     }
 
     /**
@@ -71,11 +93,13 @@ class SupportTicketFrontCreateForm extends BaseForm
                 [
                     "constraints" => [
                         new NotBlank(),
-                        new Callback([
-                            "methods" => [
-                                [$this, "verifyOrder"],
+                        new Callback(
+                            [
+                                "methods" => [
+                                    [$this, "verifyOrder"],
+                                ]
                             ]
-                        ])
+                        )
                     ]
                 ]
             )
@@ -112,39 +136,15 @@ class SupportTicketFrontCreateForm extends BaseForm
                         new NotBlank()
                     ]
                 ]
-            )
-        ;
+            );
     }
 
-    public function verifyOrder($value, ExecutionContextInterface $context)
+    protected function trans($id, $parameters = [])
     {
-        $data = $context->getRoot()->getData();
-
-        //$customerId = $this->container->get('res')
-        if (!empty($data["order_id"])) {
-            $order = OrderQuery::create()->findPk($data["order_id"]);
-            if (null === $order || ! $order->isPaid() || $order->getCustomerId() != $data["customer_id"]) {
-                $context->addViolation(
-                    $this->trans("The order is not a valid order")
-                );
-            } else {
-                if (!empty($data["order_product_id"])) {
-                    $orderProduct = OrderProductQuery::create()->findPk($data["order_product_id"]);
-                    if (null === $order || $orderProduct->getOrderId() !== $order->getId()) {
-                        $context->addViolation(
-                            $this->trans("The product is not a valid product")
-                        );
-                    }
-                }
-            }
+        if (null === $this->translator) {
+            $this->translator = Translator::getInstance();
         }
-    }
 
-    /**
-     * @return string the name of you form. This name must be unique
-     */
-    public function getName()
-    {
-        return "supportticket_new";
+        return $this->translator->trans($id, $parameters, SupportTicket::MESSAGE_DOMAIN);
     }
 }

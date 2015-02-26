@@ -27,6 +27,7 @@
                     <caption class="clearfix">
                         {intl l="Support ticket"}
 
+                        {* not implemented yet
                         {loop name="auth-create" type="auth" role="ADMIN" resource="admin.module" access="CREATE" module="SupportTicket"}
                             <div class="pull-right">
                                 <a class="btn btn-default btn-primary" title="{intl l='Create a new support ticket entry' d='supportticket.bo.default'}" data-target="#support_ticket-create" data-toggle="modal">
@@ -34,6 +35,7 @@
                                 </a>
                             </div>
                         {/loop}
+                        *}
                     </caption>
 
                     <thead>
@@ -202,6 +204,7 @@
 
 
     {* CREATE Modal *}
+    {* not implemented yet
 
     {form name="support_ticket.create"}
     {capture "support_ticket_create"}
@@ -334,7 +337,7 @@
         form_enctype       = {form_enctype form=$form}
     }
     {/form}
-
+    *}
 
     {* DELETE modal *}
 

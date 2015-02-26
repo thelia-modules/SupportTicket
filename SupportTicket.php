@@ -24,16 +24,6 @@ class SupportTicket extends BaseModule
 {
     const MESSAGE_DOMAIN = "supportticket";
 
-    /*
-    const CONFIG_ENABLED = "supportticket_enabled";
-    const CONFIG_THRESHOLD = "supportticket_threshold";
-    const CONFIG_EMAILS = "supportticket_emails";
-
-    const DEFAULT_ENABLED = "0";
-    const DEFAULT_THRESHOLD = "1";
-    const DEFAULT_EMAILS = "";
-    */
-
     /** @var Translator */
     protected $translator = null;
 
@@ -41,12 +31,6 @@ class SupportTicket extends BaseModule
     {
 
         $languages = LangQuery::create()->find();
-
-        /*
-        ConfigQuery::write(self::CONFIG_ENABLED, self::DEFAULT_ENABLED);
-        ConfigQuery::write(self::CONFIG_THRESHOLD, self::DEFAULT_THRESHOLD);
-        ConfigQuery::write(self::CONFIG_EMAILS, self::DEFAULT_EMAILS);
-        */
 
         // create new message
         if (null === MessageQuery::create()->findOneByName('supportticket_customer')) {
@@ -107,31 +91,12 @@ class SupportTicket extends BaseModule
         );
     }
 
-    /*
-    public static function getConfig()
-    {
-        $config = [
-            'enabled' => (
-                "1" == ConfigQuery::read(self::CONFIG_ENABLED, self::DEFAULT_ENABLED)
-            ),
-            'threshold' => (
-            intval(ConfigQuery::read(self::CONFIG_THRESHOLD, self::DEFAULT_THRESHOLD))
-            ),
-            'emails' => (
-            explode(',', ConfigQuery::read(self::CONFIG_EMAILS, self::DEFAULT_EMAILS))
-            )
-        ];
-
-        return $config;
-    }
-    */
-
     protected function trans($id, array $parameters = [], $locale = null)
     {
         if (null === $this->translator) {
             $this->translator = Translator::getInstance();
         }
 
-        return $this->translator->trans($id, $parameters, SupportTicket::MESSAGE_DOMAIN, $locale);
+        return $this->translator->trans($id, $parameters, self::MESSAGE_DOMAIN, $locale);
     }
 }
