@@ -21,7 +21,7 @@ use Thelia\Tools\URL;
 /**
  * Class ManagerHook
  * @package SupportTicket\Hook
- * @author Julien Chanséaume <jchanseaume@openstudio.fr>
+ * @author Julien Chanséaume <julien@thelia.net>
  */
 class ManagerHook extends BaseHook
 {

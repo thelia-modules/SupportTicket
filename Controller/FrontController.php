@@ -24,7 +24,7 @@ use Thelia\Form\Exception\FormValidationException;
 /**
  * Class FrontController
  * @package SupportTicket\Controller
- * @author Julien Chanséaume <jchanseaume@openstudio.fr>
+ * @author Julien Chanséaume <julien@thelia.net>
  */
 class FrontController extends BaseFrontController
 {

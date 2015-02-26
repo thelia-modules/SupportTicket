@@ -25,7 +25,7 @@ use Thelia\Model\OrderQuery;
 /**
  * Class SupportTicketFrontCreateForm
  * @package SupportTicket\Form
- * @author Julien Chanséaume <jchanseaume@openstudio.fr>
+ * @author Julien Chanséaume <julien@thelia.net>
  */
 class SupportTicketFrontCreateForm extends BaseForm
 {
