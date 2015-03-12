@@ -2,7 +2,7 @@
 
 Customers service and support tickets for Thelia.
 
-This module is compatible with Thelia version 2.1 or greater, and required [TheliaStudio](https://github.com/thelia-modules/TheliaStudio) module. 
+This module is compatible with Thelia version 2.1 or greater. 
 
 For now, the module is quiet simple and limited. It allows the customer to post a question.  
 It can be a general question or a question related to an order or a product.   
