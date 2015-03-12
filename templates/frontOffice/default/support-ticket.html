@@ -25,7 +25,7 @@
     {$customer_id={customer attr="id"}}
     {$orders=[]}
     {$products=[]}
-    {loop type="order" name="customer.orders" customer="$customer_id" limit="20" order="create-date-reverse"}
+    {loop type="order" name="customer.orders" customer={$customer_id} limit="20" order="create-date-reverse"}
         {$order=$ID}
         {$orders[]=['id' => $ID, 'ref' => $REF]}
         {loop type="order_product" name="order-products" order=$ID}
@@ -104,7 +104,7 @@
 
     {ifloop rel="support-ticket"}
     <div class="support-ticket-list list-group">
-        {loop name="support-ticket" type="support-ticket" customer="$customer_id" status="0,1" order="id-reverse" }
+        {loop name="support-ticket" type="support-ticket" customer_id={$customer_id} status="0,1" order="id-reverse" }
         <div class="support-ticket-item list-group-item">
             <h4>{$SUBJECT}</h4>
             <p>
