@@ -19,7 +19,7 @@ It can be a general question or a question related to an order or a product.
 Add it in your main thelia composer.json file
 
 ```
-composer require your-vendor/support-ticket-module:~1.0
+composer require thelia/support-ticket-module:~1.0
 ```
 
 ## Usage
