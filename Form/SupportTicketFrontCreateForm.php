@@ -39,7 +39,7 @@ class SupportTicketFrontCreateForm extends BaseForm
 
         if (!empty($data["order_id"])) {
             $order = OrderQuery::create()->findPk($data["order_id"]);
-            if (null === $order || !$order->isPaid() || $order->getCustomerId() != $data["customer_id"]) {
+            if (null === $order || !$order->isPaid(false) || $order->getCustomerId() != $data["customer_id"]) {
                 $context->addViolation(
                     $this->trans("The order is not a valid order")
                 );
