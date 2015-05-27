@@ -25,7 +25,7 @@
     {$customer_id={customer attr="id"}}
     {$orders=[]}
     {$products=[]}
-    {loop type="order" name="customer.orders" customer={$customer_id} limit="20" order="create-date-reverse"}
+    {loop type="order" name="customer.orders" customer={$customer_id} limit="20" order="create-date-reverse" status="2,3,4"}
         {$order=$ID}
         {$orders[]=['id' => $ID, 'ref' => $REF]}
         {loop type="order_product" name="order-products" order=$ID}
