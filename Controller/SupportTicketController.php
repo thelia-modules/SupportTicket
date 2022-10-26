@@ -9,7 +9,10 @@ namespace SupportTicket\Controller;
 use SupportTicket\Controller\Base\SupportTicketController as BaseSupportTicketController;
 use SupportTicket\Event\SupportTicketEvent;
 use SupportTicket\Model\SupportTicket;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Thelia\Core\HttpFoundation\Request;
+use Thelia\Core\Security\AccessManager;
 
 /**
  * Class SupportTicketController
@@ -17,6 +20,27 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class SupportTicketController extends BaseSupportTicketController
 {
+    /**
+     * Delete ticket from back-office
+     *
+     * @param Request $request
+     * @param EventDispatcherInterface $eventDispatcher
+     * @return mixed|string|\Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response|\Thelia\Core\HttpFoundation\Response|null
+     */
+    protected function deletePost(Request $request, EventDispatcherInterface $eventDispatcher)
+    {
+        // Check current user authorization
+        if (null !== $response = $this->checkAuth($this->resourceCode, $this->getModuleCode(), AccessManager::DELETE)) {
+            return $response;
+        }
+
+        $eventDispatcher->dispatch(
+            (new SupportTicketEvent())->setId($request->get("support_ticket_id")),
+            $this->deleteEventIdentifier
+        );
+
+        return $this->redirectToListTemplate();
+    }
 
     protected function getUpdateEvent($formData)
     {

@@ -127,7 +127,7 @@
                                     </div>
                                     <div class="form-group">
                                         {if $ORDER_PRODUCT_ID}
-                                            {loop type="order" name="order" id={$ORDER_PRODUCT_ID} backend_context="1" limit="1"}
+                                            {loop type="order_product" name="order-product" id={$ORDER_PRODUCT_ID} backend_context="1" limit="1"}
                                                 {intl l="Product: " d="supportticket.bo.default"}
                                                 <strong>{$TITLE}</strong>
                                             {/loop}

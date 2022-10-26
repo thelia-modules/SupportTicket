@@ -17,6 +17,11 @@
   <route id="supportticket.support_ticket.list" path="/admin/module/SupportTicket/support_ticket" methods="get">
     <default key="_controller">SupportTicket:SupportTicket:default</default>
   </route>
+
+  <route id="supportticket.back.support_ticket.delete" path="/admin/module/SupportTicket/support_ticket/delete" methods="post">
+    <default key="_controller">SupportTicket:SupportTicket:deletePost</default>
+  </route>
+
   <!-- not implemented yet
   <route id="supportticket.support_ticket.create" path="/admin/module/SupportTicket/support_ticket" methods="post">
     <default key="_controller">SupportTicket:SupportTicket:create</default>
