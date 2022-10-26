@@ -7,6 +7,10 @@
 namespace SupportTicket\Form\Base;
 
 use SupportTicket\SupportTicket;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Thelia\Form\BaseForm;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -37,7 +41,7 @@ class SupportTicketCreateForm extends BaseForm
 
     protected function addStatusField(array $translationKeys, array $fieldsIdKeys)
     {
-        $this->formBuilder->add("status", "checkbox", array(
+        $this->formBuilder->add("status", CheckboxType::class, array(
             "label" => $this->translator->trans($this->readKey("status", $translationKeys), [], SupportTicket::MESSAGE_DOMAIN),
             "label_attr" => ["for" => $this->readKey("status", $fieldsIdKeys)],
             "required" => false,
@@ -50,7 +54,7 @@ class SupportTicketCreateForm extends BaseForm
 
     protected function addCustomerIdField(array $translationKeys, array $fieldsIdKeys)
     {
-        $this->formBuilder->add("customer_id", "integer", array(
+        $this->formBuilder->add("customer_id", IntegerType::class, array(
             "label" => $this->translator->trans($this->readKey("customer_id", $translationKeys), [], SupportTicket::MESSAGE_DOMAIN),
             "label_attr" => ["for" => $this->readKey("customer_id", $fieldsIdKeys)],
             "required" => true,
@@ -64,7 +68,7 @@ class SupportTicketCreateForm extends BaseForm
 
     protected function addAdminIdField(array $translationKeys, array $fieldsIdKeys)
     {
-        $this->formBuilder->add("admin_id", "integer", array(
+        $this->formBuilder->add("admin_id", IntegerType::class, array(
             "label" => $this->translator->trans($this->readKey("admin_id", $translationKeys), [], SupportTicket::MESSAGE_DOMAIN),
             "label_attr" => ["for" => $this->readKey("admin_id", $fieldsIdKeys)],
             "required" => false,
@@ -77,7 +81,7 @@ class SupportTicketCreateForm extends BaseForm
 
     protected function addOrderIdField(array $translationKeys, array $fieldsIdKeys)
     {
-        $this->formBuilder->add("order_id", "integer", array(
+        $this->formBuilder->add("order_id", IntegerType::class, array(
             "label" => $this->translator->trans($this->readKey("order_id", $translationKeys), [], SupportTicket::MESSAGE_DOMAIN),
             "label_attr" => ["for" => $this->readKey("order_id", $fieldsIdKeys)],
             "required" => false,
@@ -90,7 +94,7 @@ class SupportTicketCreateForm extends BaseForm
 
     protected function addOrderProductIdField(array $translationKeys, array $fieldsIdKeys)
     {
-        $this->formBuilder->add("order_product_id", "integer", array(
+        $this->formBuilder->add("order_product_id", IntegerType::class, array(
             "label" => $this->translator->trans($this->readKey("order_product_id", $translationKeys), [], SupportTicket::MESSAGE_DOMAIN),
             "label_attr" => ["for" => $this->readKey("order_product_id", $fieldsIdKeys)],
             "required" => false,
@@ -103,7 +107,7 @@ class SupportTicketCreateForm extends BaseForm
 
     protected function addSubjectField(array $translationKeys, array $fieldsIdKeys)
     {
-        $this->formBuilder->add("subject", "text", array(
+        $this->formBuilder->add("subject", TextType::class, array(
             "label" => $this->translator->trans($this->readKey("subject", $translationKeys), [], SupportTicket::MESSAGE_DOMAIN),
             "label_attr" => ["for" => $this->readKey("subject", $fieldsIdKeys)],
             "required" => false,
@@ -116,7 +120,7 @@ class SupportTicketCreateForm extends BaseForm
 
     protected function addMessageField(array $translationKeys, array $fieldsIdKeys)
     {
-        $this->formBuilder->add("message", "textarea", array(
+        $this->formBuilder->add("message", TextareaType::class, array(
             "label" => $this->translator->trans($this->readKey("message", $translationKeys), [], SupportTicket::MESSAGE_DOMAIN),
             "label_attr" => ["for" => $this->readKey("message", $fieldsIdKeys)],
             "required" => false,
@@ -129,7 +133,7 @@ class SupportTicketCreateForm extends BaseForm
 
     protected function addResponseField(array $translationKeys, array $fieldsIdKeys)
     {
-        $this->formBuilder->add("response", "textarea", array(
+        $this->formBuilder->add("response", TextareaType::class, array(
             "label" => $this->translator->trans($this->readKey("response", $translationKeys), [], SupportTicket::MESSAGE_DOMAIN),
             "label_attr" => ["for" => $this->readKey("response", $fieldsIdKeys)],
             "required" => false,
@@ -142,7 +146,7 @@ class SupportTicketCreateForm extends BaseForm
 
     protected function addCommentField(array $translationKeys, array $fieldsIdKeys)
     {
-        $this->formBuilder->add("comment", "textarea", array(
+        $this->formBuilder->add("comment", TextareaType::class, array(
             "label" => $this->translator->trans($this->readKey("comment", $translationKeys), [], SupportTicket::MESSAGE_DOMAIN),
             "label_attr" => ["for" => $this->readKey("comment", $fieldsIdKeys)],
             "required" => false,
@@ -153,7 +157,7 @@ class SupportTicketCreateForm extends BaseForm
         ));
     }
 
-    public function getName()
+    public static function getName()
     {
         return static::FORM_NAME;
     }

@@ -6,13 +6,15 @@
 
 namespace SupportTicket\Controller\Base;
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Thelia\Controller\Admin\AbstractCrudController;
-use Thelia\Core\Security\Resource\AdminResources;
-use Thelia\Tools\URL;
 use SupportTicket\Event\SupportTicketEvent;
 use SupportTicket\Event\SupportTicketEvents;
 use SupportTicket\Model\SupportTicketQuery;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Thelia\Controller\Admin\AbstractCrudController;
+use Thelia\Core\Security\Resource\AdminResources;
+use Thelia\Core\Template\ParserContext;
+use Thelia\Tools\URL;
 
 /**
  * Class SupportTicketController
@@ -21,8 +23,14 @@ use SupportTicket\Model\SupportTicketQuery;
  */
 class SupportTicketController extends AbstractCrudController
 {
-    public function __construct()
+    protected RequestStack $requestStack;
+    protected ParserContext $parserContext;
+
+    public function __construct(RequestStack $requestStack, ParserContext $parserContext)
     {
+        $this->requestStack = $requestStack;
+        $this->parserContext = $parserContext;
+
         parent::__construct(
             "support_ticket",
             "id",
@@ -62,7 +70,7 @@ class SupportTicketController extends AbstractCrudController
      *
      * @param mixed $object
      */
-    protected function hydrateObjectForm($object)
+    protected function hydrateObjectForm(ParserContext $parserContext, $object)
     {
         $data = array(
             "id" => $object->getId(),
@@ -134,7 +142,7 @@ class SupportTicketController extends AbstractCrudController
     {
         $event = new SupportTicketEvent();
 
-        $event->setId($this->getRequest()->request->get("support_ticket_id"));
+        $event->setId($this->requestStack->getCurrentRequest()->request->get("support_ticket_id"));
 
         return $event;
     }
@@ -165,7 +173,7 @@ class SupportTicketController extends AbstractCrudController
     protected function getExistingObject()
     {
         return SupportTicketQuery::create()
-            ->findPk($this->getRequest()->query->get("support_ticket_id"))
+            ->findPk($this->requestStack->getCurrentRequest()->query->get("support_ticket_id"))
         ;
     }
 
@@ -208,10 +216,10 @@ class SupportTicketController extends AbstractCrudController
      */
     protected function renderEditionTemplate()
     {
-        $this->getParserContext()
+        $this->parserContext
             ->set(
                 "support_ticket_id",
-                $this->getRequest()->query->get("support_ticket_id")
+                $this->requestStack->getCurrentRequest()->query->get("support_ticket_id")
             )
         ;
 
@@ -224,7 +232,7 @@ class SupportTicketController extends AbstractCrudController
      */
     protected function redirectToEditionTemplate()
     {
-        $id = $this->getRequest()->query->get("support_ticket_id");
+        $id = $this->requestStack->getCurrentRequest()->query->get("support_ticket_id");
 
         return new RedirectResponse(
             URL::getInstance()->absoluteUrl(

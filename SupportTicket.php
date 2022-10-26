@@ -13,6 +13,7 @@
 namespace SupportTicket;
 
 use Propel\Runtime\Connection\ConnectionInterface;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ServicesConfigurator;
 use Thelia\Core\Translation\Translator;
 use Thelia\Install\Database;
 use Thelia\Model\LangQuery;
@@ -22,14 +23,13 @@ use Thelia\Module\BaseModule;
 
 class SupportTicket extends BaseModule
 {
-    const MESSAGE_DOMAIN = "supportticket";
+    public const MESSAGE_DOMAIN = "supportticket";
 
     /** @var Translator */
     protected $translator = null;
 
-    public function postActivation(ConnectionInterface $con = null)
+    public function postActivation(ConnectionInterface $con = null): void
     {
-
         $languages = LangQuery::create()->find();
 
         // create new message
@@ -98,5 +98,13 @@ class SupportTicket extends BaseModule
         }
 
         return $this->translator->trans($id, $parameters, self::MESSAGE_DOMAIN, $locale);
+    }
+
+    public static function configureServices(ServicesConfigurator $servicesConfigurator): void
+    {
+        $servicesConfigurator->load(self::getModuleCode().'\\', __DIR__)
+            ->exclude([THELIA_MODULE_DIR.ucfirst(self::getModuleCode()).'/I18n/*'])
+            ->autowire(true)
+            ->autoconfigure(true);
     }
 }

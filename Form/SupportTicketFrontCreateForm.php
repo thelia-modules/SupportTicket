@@ -14,6 +14,8 @@
 namespace SupportTicket\Form;
 
 use SupportTicket\SupportTicket;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\ExecutionContextInterface;
@@ -59,7 +61,7 @@ class SupportTicketFrontCreateForm extends BaseForm
     /**
      * @return string the name of you form. This name must be unique
      */
-    public function getName()
+    public static function getName()
     {
         return "supportticket_new";
     }
@@ -89,7 +91,7 @@ class SupportTicketFrontCreateForm extends BaseForm
         $this->formBuilder
             ->add(
                 "customer_id",
-                'text',
+                TextType::class,
                 [
                     "constraints" => [
                         new NotBlank(),
@@ -105,21 +107,21 @@ class SupportTicketFrontCreateForm extends BaseForm
             )
             ->add(
                 "order_id",
-                'text',
+                TextType::class,
                 [
                     "label" => $this->trans("Order"),
                 ]
             )
             ->add(
                 "order_product_id",
-                'text',
+                TextType::class,
                 [
                     "label" => $this->trans("Product"),
                 ]
             )
             ->add(
                 "subject",
-                'text',
+                TextType::class,
                 [
                     "label" => $this->trans("Subject"),
                     "constraints" => [
@@ -129,7 +131,7 @@ class SupportTicketFrontCreateForm extends BaseForm
             )
             ->add(
                 "message",
-                'textarea',
+                TextareaType::class,
                 [
                     "label" => $this->trans("Message"),
                     "constraints" => [

@@ -9,6 +9,7 @@ namespace SupportTicket\Controller;
 use SupportTicket\Controller\Base\SupportTicketController as BaseSupportTicketController;
 use SupportTicket\Event\SupportTicketEvent;
 use SupportTicket\Model\SupportTicket;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class SupportTicketController
@@ -16,6 +17,7 @@ use SupportTicket\Model\SupportTicket;
  */
 class SupportTicketController extends BaseSupportTicketController
 {
+
     protected function getUpdateEvent($formData)
     {
         $event = new SupportTicketEvent();
