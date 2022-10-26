@@ -136,7 +136,7 @@
                             <td>
                                 {if $ORDER_ID}
                                     {loop type="order" name="order" id={$ORDER_ID} backend_context="1"}
-                                        <a href="{url path='/admin/order/update' order_id=$ID}">
+                                        <a href="{url path="/admin/order/update/$ID"}">
                                             {$REF}
                                         </a>
                                     {/loop}
