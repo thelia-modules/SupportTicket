@@ -13,7 +13,7 @@ namespace SupportTicket\Event\Base;
  */
 class SupportTicketEvents
 {
-    const CREATE = "action.support_ticket.create";
-    const UPDATE = "action.support_ticket.update";
-    const DELETE = "action.support_ticket.delete";
+    public const CREATE = "action.support_ticket.create";
+    public const UPDATE = "action.support_ticket.update";
+    public const DELETE = "action.support_ticket.delete";
 }

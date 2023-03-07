@@ -8,12 +8,17 @@ namespace SupportTicket\Controller\Base;
 
 use SupportTicket\Event\SupportTicketEvent;
 use SupportTicket\Event\SupportTicketEvents;
+use SupportTicket\Form\SupportTicketUpdateForm;
+use SupportTicket\Form\SupportTicketCreateForm;
 use SupportTicket\Model\SupportTicketQuery;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Thelia\Controller\Admin\AbstractCrudController;
+use Thelia\Core\Event\ActionEvent;
 use Thelia\Core\Security\Resource\AdminResources;
 use Thelia\Core\Template\ParserContext;
+use Thelia\Form\BaseForm;
 use Thelia\Tools\URL;
 
 /**
@@ -48,21 +53,21 @@ class SupportTicketController extends AbstractCrudController
     /**
      * Return the creation form for this object
      */
-    protected function getCreationForm()
+    protected function getCreationForm(): BaseForm
     {
-        return $this->createForm("support_ticket.create");
+        return $this->createForm(SupportTicketCreateForm::getName());
     }
 
     /**
      * Return the update form for this object
      */
-    protected function getUpdateForm($data = array())
+    protected function getUpdateForm($data = array()): BaseForm
     {
         if (!is_array($data)) {
             $data = array();
         }
 
-        return $this->createForm("support_ticket.update", "form", $data);
+        return $this->createForm(SupportTicketUpdateForm::getName(), FormType::class, $data);
     }
 
     /**
@@ -70,7 +75,7 @@ class SupportTicketController extends AbstractCrudController
      *
      * @param mixed $object
      */
-    protected function hydrateObjectForm(ParserContext $parserContext, $object)
+    protected function hydrateObjectForm(ParserContext $parserContext, $object): BaseForm
     {
         $data = array(
             "id" => $object->getId(),
@@ -92,36 +97,36 @@ class SupportTicketController extends AbstractCrudController
      * Creates the creation event with the provided form data
      *
      * @param mixed $formData
-     * @return \Thelia\Core\Event\ActionEvent
+     * @return ActionEvent
      */
     protected function getCreationEvent($formData)
     {
         $event = new SupportTicketEvent();
 
-        $event->setStatus($formData["status"]);
-        $event->setCustomerId($formData["customer_id"]);
-        $event->setAdminId($formData["admin_id"]);
-        $event->setOrderId($formData["order_id"]);
-        $event->setOrderProductId($formData["order_product_id"]);
-        $event->setSubject($formData["subject"]);
-        $event->setMessage($formData["message"]);
-        $event->setResponse($formData["response"]);
-        $event->setComment($formData["comment"]);
-
-        return $event;
+        return $this->createSupportTicket($event, $formData);
     }
 
     /**
      * Creates the update event with the provided form data
      *
      * @param mixed $formData
-     * @return \Thelia\Core\Event\ActionEvent
+     * @return ActionEvent
      */
     protected function getUpdateEvent($formData)
     {
         $event = new SupportTicketEvent();
 
         $event->setId($formData["id"]);
+        return $this->createSupportTicket($event, $formData);
+    }
+
+    /**
+     * @param SupportTicketEvent $event
+     * @param $formData
+     * @return SupportTicketEvent
+     */
+    protected function createSupportTicket(SupportTicketEvent $event, $formData): SupportTicketEvent
+    {
         $event->setStatus($formData["status"]);
         $event->setCustomerId($formData["customer_id"]);
         $event->setAdminId($formData["admin_id"]);
@@ -138,7 +143,7 @@ class SupportTicketController extends AbstractCrudController
     /**
      * Creates the delete event with the provided form data
      */
-    protected function getDeleteEvent()
+    protected function getDeleteEvent(): SupportTicketEvent
     {
         $event = new SupportTicketEvent();
 
@@ -152,7 +157,7 @@ class SupportTicketController extends AbstractCrudController
      *
      * @param mixed $event
      */
-    protected function eventContainsObject($event)
+    protected function eventContainsObject($event): bool
     {
         return null !== $this->getObjectFromEvent($event);
     }
@@ -182,7 +187,7 @@ class SupportTicketController extends AbstractCrudController
      *
      * @param mixed $object
      */
-    protected function getObjectLabel($object)
+    protected function getObjectLabel($object): string
     {
         return '';
     }
@@ -200,7 +205,7 @@ class SupportTicketController extends AbstractCrudController
     /**
      * Render the main list template
      *
-     * @param mixed $currentOrder , if any, null otherwise.
+     * @param mixed $currentOrder if any, null otherwise.
      */
     protected function renderListTemplate($currentOrder)
     {
@@ -228,9 +233,9 @@ class SupportTicketController extends AbstractCrudController
 
     /**
      * Must return a RedirectResponse instance
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
-    protected function redirectToEditionTemplate()
+    protected function redirectToEditionTemplate(): RedirectResponse
     {
         $id = $this->requestStack->getCurrentRequest()->query->get("support_ticket_id");
 
@@ -246,9 +251,9 @@ class SupportTicketController extends AbstractCrudController
 
     /**
      * Must return a RedirectResponse instance
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
-    protected function redirectToListTemplate()
+    protected function redirectToListTemplate(): RedirectResponse
     {
         return new RedirectResponse(
             URL::getInstance()->absoluteUrl("/admin/module/SupportTicket/support_ticket")

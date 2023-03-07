@@ -6,18 +6,19 @@
 
 namespace SupportTicket\Action\Base;
 
-use SupportTicket\Model\Map\SupportTicketTableMap;
+use Exception;
+use Propel\Runtime\Exception\PropelException;
+use Propel\Runtime\Propel;
+use RuntimeException;
 use SupportTicket\Event\SupportTicketEvent;
 use SupportTicket\Event\SupportTicketEvents;
-use SupportTicket\Model\SupportTicketQuery;
+use SupportTicket\Model\Map\SupportTicketTableMap;
 use SupportTicket\Model\SupportTicket;
-use Thelia\Action\BaseAction;
-use Thelia\Core\Event\ToggleVisibilityEvent;
-use Thelia\Core\Event\UpdatePositionEvent;
-use Propel\Runtime\Propel;
+use SupportTicket\Model\SupportTicketQuery;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Thelia\Action\BaseAction;
 use Thelia\Core\Event\TheliaEvents;
-use \Thelia\Core\Event\TheliaFormEvent;
+use Thelia\Core\Event\TheliaFormEvent;
 
 /**
  * Class SupportTicketAction
@@ -26,24 +27,36 @@ use \Thelia\Core\Event\TheliaFormEvent;
  */
 class SupportTicketAction extends BaseAction implements EventSubscriberInterface
 {
-    public function create(SupportTicketEvent $event)
+    /**
+     * @throws Exception
+     */
+    public function create(SupportTicketEvent $event): void
     {
         $this->createOrUpdate($event, new SupportTicket());
     }
 
-    public function update(SupportTicketEvent $event)
+    /**
+     * @throws Exception
+     */
+    public function update(SupportTicketEvent $event): void
     {
         $model = $this->getSupportTicket($event);
 
         $this->createOrUpdate($event, $model);
     }
 
-    public function delete(SupportTicketEvent $event)
+    /**
+     * @throws PropelException
+     */
+    public function delete(SupportTicketEvent $event): void
     {
         $this->getSupportTicket($event)->delete();
     }
 
-    protected function createOrUpdate(SupportTicketEvent $event, SupportTicket $model)
+    /**
+     * @throws PropelException
+     */
+    protected function createOrUpdate(SupportTicketEvent $event, SupportTicket $model): void
     {
         $con = Propel::getConnection(SupportTicketTableMap::DATABASE_NAME);
         $con->beginTransaction();
@@ -92,7 +105,7 @@ class SupportTicketAction extends BaseAction implements EventSubscriberInterface
             $model->save($con);
 
             $con->commit();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $con->rollback();
 
             throw $e;
@@ -106,7 +119,7 @@ class SupportTicketAction extends BaseAction implements EventSubscriberInterface
         $model = SupportTicketQuery::create()->findPk($event->getId());
 
         if (null === $model) {
-            throw new \RuntimeException(sprintf(
+            throw new RuntimeException(sprintf(
                 "The 'support_ticket' id '%d' doesn't exist",
                 $event->getId()
             ));
@@ -115,19 +128,19 @@ class SupportTicketAction extends BaseAction implements EventSubscriberInterface
         return $model;
     }
 
-    public function beforeCreateFormBuild(TheliaFormEvent $event)
+    public function beforeCreateFormBuild(TheliaFormEvent $event): void
     {
     }
 
-    public function beforeUpdateFormBuild(TheliaFormEvent $event)
+    public function beforeUpdateFormBuild(TheliaFormEvent $event): void
     {
     }
 
-    public function afterCreateFormBuild(TheliaFormEvent $event)
+    public function afterCreateFormBuild(TheliaFormEvent $event): void
     {
     }
 
-    public function afterUpdateFormBuild(TheliaFormEvent $event)
+    public function afterUpdateFormBuild(TheliaFormEvent $event): void
     {
     }
 
@@ -151,7 +164,7 @@ class SupportTicketAction extends BaseAction implements EventSubscriberInterface
      *
      * @api
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return array(
             SupportTicketEvents::CREATE => array("create", 128),

@@ -14,7 +14,7 @@ use SupportTicket\Model\Base\SupportTicket as BaseSupportTicket;
  */
 class SupportTicket extends BaseSupportTicket
 {
-    const STATUS_NEW = 0;
-    const STATUS_REPLIED = 1;
-    const STATUS_CLOSED = 2;
+    public const STATUS_NEW = 0;
+    public const STATUS_REPLIED = 1;
+    public const STATUS_CLOSED = 2;
 }

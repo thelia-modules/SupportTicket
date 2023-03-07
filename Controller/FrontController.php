@@ -13,6 +13,7 @@
 
 namespace SupportTicket\Controller;
 
+use Exception;
 use SupportTicket\Event\SupportTicketEvent;
 use SupportTicket\Event\SupportTicketEvents;
 use SupportTicket\Model\SupportTicket;
@@ -20,9 +21,9 @@ use SupportTicket\Model\SupportTicketQuery;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Thelia\Controller\Front\BaseFrontController;
 use Thelia\Core\HttpFoundation\Request;
+use Thelia\Core\HttpFoundation\Response;
 use Thelia\Core\Security\SecurityContext;
 use Thelia\Core\Translation\Translator;
-use Thelia\Form\Exception\FormValidationException;
 
 /**
  * Class FrontController
@@ -34,14 +35,14 @@ class FrontController extends BaseFrontController
     /** @var Translator $translator */
     protected $translator;
 
-    public function defaultAction()
+    public function defaultAction(): Response
     {
         $this->checkAuth();
 
         return $this->render('support-ticket');
     }
 
-    public function createAction(EventDispatcherInterface $eventDispatcher)
+    public function createAction(EventDispatcherInterface $eventDispatcher): Response
     {
         $this->checkAuth();
 
@@ -65,7 +66,7 @@ class FrontController extends BaseFrontController
 
             $responseData['success'] = true;
             $responseData['message'] = 'ok';
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $responseData['message'] = $e->getMessage();
         }
 
@@ -104,7 +105,7 @@ class FrontController extends BaseFrontController
         return $this->generateRedirect('/module/SupportTicket/support');
     }
 
-    protected function trans($id, $parameters = [])
+    protected function trans($id, $parameters = []): string
     {
         if (null === $this->translator) {
             $this->translator = Translator::getInstance();

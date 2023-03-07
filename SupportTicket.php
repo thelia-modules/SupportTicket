@@ -13,6 +13,7 @@
 namespace SupportTicket;
 
 use Propel\Runtime\Connection\ConnectionInterface;
+use Propel\Runtime\Exception\PropelException;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ServicesConfigurator;
 use Thelia\Core\Translation\Translator;
 use Thelia\Install\Database;
@@ -25,9 +26,12 @@ class SupportTicket extends BaseModule
 {
     public const MESSAGE_DOMAIN = "supportticket";
 
-    /** @var Translator */
-    protected $translator = null;
+    /** @var Translator|null */
+    protected ?Translator $translator = null;
 
+    /**
+     * @throws PropelException
+     */
     public function postActivation(ConnectionInterface $con = null): void
     {
         $languages = LangQuery::create()->find();
@@ -91,7 +95,7 @@ class SupportTicket extends BaseModule
         );
     }
 
-    protected function trans($id, array $parameters = [], $locale = null)
+    protected function trans($id, array $parameters = [], $locale = null): string
     {
         if (null === $this->translator) {
             $this->translator = Translator::getInstance();
@@ -103,7 +107,10 @@ class SupportTicket extends BaseModule
     public static function configureServices(ServicesConfigurator $servicesConfigurator): void
     {
         $servicesConfigurator->load(self::getModuleCode().'\\', __DIR__)
-            ->exclude([THELIA_MODULE_DIR.ucfirst(self::getModuleCode()).'/I18n/*'])
+            ->exclude([
+                THELIA_MODULE_DIR.ucfirst(self::getModuleCode()).'/I18n/*',
+                THELIA_MODULE_DIR.ucfirst(self::getModuleCode()).'/*/Base/*'
+            ])
             ->autowire(true)
             ->autoconfigure(true);
     }

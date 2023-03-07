@@ -34,7 +34,7 @@ class SupportTicketEvent extends ActionEvent
         return $this->id;
     }
 
-    public function setId($id)
+    public function setId($id): SupportTicketEvent
     {
         $this->id = $id;
 
@@ -46,7 +46,7 @@ class SupportTicketEvent extends ActionEvent
         return $this->status;
     }
 
-    public function setStatus($status)
+    public function setStatus($status): SupportTicketEvent
     {
         $this->status = $status;
 
@@ -58,7 +58,7 @@ class SupportTicketEvent extends ActionEvent
         return $this->customerId;
     }
 
-    public function setCustomerId($customerId)
+    public function setCustomerId($customerId): SupportTicketEvent
     {
         $this->customerId = $customerId;
 
@@ -70,7 +70,7 @@ class SupportTicketEvent extends ActionEvent
         return $this->adminId;
     }
 
-    public function setAdminId($adminId)
+    public function setAdminId($adminId): SupportTicketEvent
     {
         $this->adminId = $adminId;
 
@@ -82,7 +82,7 @@ class SupportTicketEvent extends ActionEvent
         return $this->orderId;
     }
 
-    public function setOrderId($orderId)
+    public function setOrderId($orderId): SupportTicketEvent
     {
         $this->orderId = $orderId;
 
@@ -94,7 +94,7 @@ class SupportTicketEvent extends ActionEvent
         return $this->orderProductId;
     }
 
-    public function setOrderProductId($orderProductId)
+    public function setOrderProductId($orderProductId): SupportTicketEvent
     {
         $this->orderProductId = $orderProductId;
 
@@ -106,7 +106,7 @@ class SupportTicketEvent extends ActionEvent
         return $this->subject;
     }
 
-    public function setSubject($subject)
+    public function setSubject($subject): SupportTicketEvent
     {
         $this->subject = $subject;
 
@@ -118,7 +118,7 @@ class SupportTicketEvent extends ActionEvent
         return $this->message;
     }
 
-    public function setMessage($message)
+    public function setMessage($message): SupportTicketEvent
     {
         $this->message = $message;
 
@@ -130,7 +130,7 @@ class SupportTicketEvent extends ActionEvent
         return $this->response;
     }
 
-    public function setResponse($response)
+    public function setResponse($response): SupportTicketEvent
     {
         $this->response = $response;
 
@@ -148,7 +148,7 @@ class SupportTicketEvent extends ActionEvent
     /**
      * @param mixed $repliedAt
      */
-    public function setRepliedAt($repliedAt)
+    public function setRepliedAt($repliedAt): SupportTicketEvent
     {
         $this->repliedAt = $repliedAt;
 
@@ -160,7 +160,7 @@ class SupportTicketEvent extends ActionEvent
         return $this->comment;
     }
 
-    public function setComment($comment)
+    public function setComment($comment): SupportTicketEvent
     {
         $this->comment = $comment;
 
@@ -172,7 +172,7 @@ class SupportTicketEvent extends ActionEvent
         return $this->supportTicket;
     }
 
-    public function setSupportTicket(SupportTicket $supportTicket)
+    public function setSupportTicket(SupportTicket $supportTicket): SupportTicketEvent
     {
         $this->supportTicket = $supportTicket;
 

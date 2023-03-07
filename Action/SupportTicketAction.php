@@ -15,7 +15,6 @@ use Thelia\Mailer\MailerFactory;
 use Thelia\Model\ConfigQuery;
 use Thelia\Model\CustomerQuery;
 use Thelia\Model\Lang;
-use Thelia\Model\MessageQuery;
 
 /**
  * Class SupportTicketAction
@@ -24,9 +23,9 @@ use Thelia\Model\MessageQuery;
 class SupportTicketAction extends BaseSupportTicketAction
 {
 
-    protected $parser;
+    protected ParserInterface $parser;
 
-    protected $mailer;
+    protected MailerFactory $mailer;
 
     public function __construct(ParserInterface $parser, MailerFactory $mailer)
     {
@@ -34,7 +33,7 @@ class SupportTicketAction extends BaseSupportTicketAction
         $this->mailer = $mailer;
     }
 
-    public function create(SupportTicketEvent $event)
+    public function create(SupportTicketEvent $event): void
     {
         parent::create($event);
 
@@ -42,7 +41,7 @@ class SupportTicketAction extends BaseSupportTicketAction
         $this->sendMail($event->getSupportTicket(), false);
     }
 
-    protected function sendMail(SupportTicket $supportTicket, $toCustomer = true)
+    protected function sendMail(SupportTicket $supportTicket, $toCustomer = true): void
     {
         $contactEmail = ConfigQuery::read('store_email');
 
@@ -50,45 +49,28 @@ class SupportTicketAction extends BaseSupportTicketAction
             $emailTemplate = 'supportticket_customer';
             $customer = CustomerQuery::create()->findPk($supportTicket->getCustomerId());
             $locale = $customer->getCustomerLang()->getLocale();
-            $emailTo = $customer->getEmail();
+            $emailTo = [ $customer->getEmail() => $customer->getFirstName() . ' ' . $customer->getLastName() ];
         } else {
             $emailTemplate = 'supportticket_administrator';
             $locale = Lang::getDefaultLanguage()->getLocale();
-            $emailTo = $contactEmail;
+            $emailTo = [ ConfigQuery::getStoreEmail() => ConfigQuery::getStoreName() ];
         }
 
         if ($contactEmail) {
+            $this->mailer->sendEmailMessage(
+                $emailTemplate,
+                [ ConfigQuery::getStoreEmail() => ConfigQuery::getStoreName() ],
+                $emailTo,
+                ['locale' => $locale, 'ticket' => $supportTicket]
+            );
 
-            $message = MessageQuery::create()
-                ->filterByName($emailTemplate)
-                ->findOne();
-
-            if (null === $message) {
-                throw new \Exception(sprintf("Failed to load message '%s'.", $emailTemplate));
-            }
-
-            $this->parser->assign('locale', $locale);
-            $this->parser->assign('ticket', $supportTicket);
-
-            $message
-                ->setLocale($locale);
-
-            $instance = \Swift_Message::newInstance()
-                ->addTo($emailTo)
-                ->addFrom($contactEmail, ConfigQuery::read('store_name'));
-
-            // Build subject and body
-            $message->buildMessage($this->parser, $instance);
-
-            $this->mailer->send($instance);
-
-            Tlog::getInstance()->debug("Sending support ticket mail to " . $emailTo);
+            Tlog::getInstance()->debug("Sending support ticket mail to " . array_key_first($emailTo));
         } else {
             Tlog::getInstance()->debug("Support ticket message no contact email ");
         }
     }
 
-    public function update(SupportTicketEvent $event)
+    public function update(SupportTicketEvent $event): void
     {
         $model = $this->getSupportTicket($event);
 

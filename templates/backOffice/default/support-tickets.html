@@ -14,9 +14,9 @@
 {block name="main-content"}
     <div id="wrapper" class="container">
 
-        {if $general_error}
+        {if $general_error|default:false}
             <div class="alert alert-danger">
-                {$general_error}
+                {$general_error|default:''}
             </div>
         {/if}
 
@@ -149,7 +149,6 @@
                                     {/loop}
                                 {/if}
                             </td>
-                            </td>
                             <td>
                                 {$SUBJECT}
                             </td>
@@ -187,7 +186,6 @@
                             <td colspan="7">
                                 {include
                                 file           = "includes/pagination.html"
-
                                 loop_ref       = "support-ticket-list"
                                 max_page_count = 20
                                 page_url       = "{url path="/admin/module/SupportTicket/support_ticket" order=$order target='support_ticket-table'}"
@@ -201,145 +199,6 @@
             </div>
         </div>
     </div>
-
-
-    {* CREATE Modal *}
-    {* not implemented yet
-
-    {form name="support_ticket.create"}
-    {capture "support_ticket_create"}
-        {form_hidden_fields form=$form}
-
-
-        {render_form_field form=$form field="success_url" value={url path='/admin/module/SupportTicket/support_ticket/edit?support_ticket_id=_ID_'}}
-
-        {form_field form=$form field="status"}
-            <div class="form-group"">
-                <label class="control-label" for="{$label_attr.for}">
-                    {$label}
-                    {if $required}<span class="required">*</span>{/if}
-                </label>
-
-                {form_error form=$form field="status"}{$message}{/form_error}
-
-                <input type="checkbox" name="{$name}" id="{$label_attr.for}" {if $STATUS}checked{/if} {form_field_attributes form=$form field="status"} placeholder="{intl l='The support ticket status'}" />
-            </div>
-        {/form_field}
-        {form_field form=$form field="customer_id"}
-            <div class="form-group"">
-                <label class="control-label" for="{$label_attr.for}">
-                    {$label}
-                    {if $required}<span class="required">*</span>{/if}
-                </label>
-
-                {form_error form=$form field="customer_id"}{$message}{/form_error}
-
-                <input type="integer" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$CUSTOMER_ID}" {form_field_attributes form=$form field="customer_id"} placeholder="{intl l='The support ticket customer_id'}" />
-            </div>
-        {/form_field}
-        {form_field form=$form field="admin_id"}
-            <div class="form-group"">
-                <label class="control-label" for="{$label_attr.for}">
-                    {$label}
-                    {if $required}<span class="required">*</span>{/if}
-                </label>
-
-                {form_error form=$form field="admin_id"}{$message}{/form_error}
-
-                <input type="integer" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$ADMIN_ID}" {form_field_attributes form=$form field="admin_id"} placeholder="{intl l='The support ticket admin_id'}" />
-            </div>
-        {/form_field}
-        {form_field form=$form field="order_id"}
-            <div class="form-group"">
-                <label class="control-label" for="{$label_attr.for}">
-                    {$label}
-                    {if $required}<span class="required">*</span>{/if}
-                </label>
-
-                {form_error form=$form field="order_id"}{$message}{/form_error}
-
-                <input type="integer" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$ORDER_ID}" {form_field_attributes form=$form field="order_id"} placeholder="{intl l='The support ticket order_id'}" />
-            </div>
-        {/form_field}
-        {form_field form=$form field="order_product_id"}
-            <div class="form-group"">
-                <label class="control-label" for="{$label_attr.for}">
-                    {$label}
-                    {if $required}<span class="required">*</span>{/if}
-                </label>
-
-                {form_error form=$form field="order_product_id"}{$message}{/form_error}
-
-                <input type="integer" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$ORDER_PRODUCT_ID}" {form_field_attributes form=$form field="order_product_id"} placeholder="{intl l='The support ticket order_product_id'}" />
-            </div>
-        {/form_field}
-        {form_field form=$form field="subject"}
-            <div class="form-group"">
-                <label class="control-label" for="{$label_attr.for}">
-                    {$label}
-                    {if $required}<span class="required">*</span>{/if}
-                </label>
-
-                {form_error form=$form field="subject"}{$message}{/form_error}
-
-                <input type="text" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$SUBJECT}" {form_field_attributes form=$form field="subject"} placeholder="{intl l='The support ticket subject'}" />
-            </div>
-        {/form_field}
-        {form_field form=$form field="message"}
-            <div class="form-group"">
-                <label class="control-label" for="{$label_attr.for}">
-                    {$label}
-                    {if $required}<span class="required">*</span>{/if}
-                </label>
-
-                {form_error form=$form field="message"}{$message}{/form_error}
-
-                <textarea class="form-control" name="{$name}" id="{$label_attr.for}"{form_field_attributes form=$form field="message"} placeholder="{intl l='The support ticket message'}">{$MESSAGE}</textarea>
-            </div>
-        {/form_field}
-        {form_field form=$form field="response"}
-            <div class="form-group"">
-                <label class="control-label" for="{$label_attr.for}">
-                    {$label}
-                    {if $required}<span class="required">*</span>{/if}
-                </label>
-
-                {form_error form=$form field="response"}{$message}{/form_error}
-
-                <textarea class="form-control" name="{$name}" id="{$label_attr.for}"{form_field_attributes form=$form field="response"} placeholder="{intl l='The support ticket response'}">{$RESPONSE}</textarea>
-            </div>
-        {/form_field}
-        {form_field form=$form field="comment"}
-            <div class="form-group"">
-                <label class="control-label" for="{$label_attr.for}">
-                    {$label}
-                    {if $required}<span class="required">*</span>{/if}
-                </label>
-
-                {form_error form=$form field="comment"}{$message}{/form_error}
-
-                <textarea class="form-control" name="{$name}" id="{$label_attr.for}"{form_field_attributes form=$form field="comment"} placeholder="{intl l='The support ticket comment'}">{$COMMENT}</textarea>
-            </div>
-        {/form_field}
-    {/capture}
-
-    {include file="includes/generic-create-dialog.html"
-
-
-        dialog_id       = "support_ticket-create"
-        dialog_title    = {intl l="Create an entry of support ticket" d="supportticket.bo.default"}
-        dialog_body     = {$smarty.capture.support_ticket_create nofilter}
-
-        dialog_ok_label     = {intl l="Create"}
-        dialog_cancel_label = {intl l="Cancel"}
-
-        form_action        = {$current_url}
-        form_enctype       = {form_enctype form=$form}
-    }
-    {/form}
-    *}
-
-    {* DELETE modal *}
 
     {capture "support_ticket_delete"}
         {intl l="Do you really want to delete this support ticket entry ?" d="supportticket.bo.default"}

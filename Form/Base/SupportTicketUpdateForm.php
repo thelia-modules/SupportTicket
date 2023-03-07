@@ -16,9 +16,9 @@ use SupportTicket\Form\Type\SupportTicketIdType;
  */
 class SupportTicketUpdateForm extends ChildSupportTicketCreateForm
 {
-    const FORM_NAME = "support_ticket_update";
+    public const FORM_NAME = "support_ticket_update";
 
-    public function buildForm()
+    public function buildForm(): void
     {
         parent::buildForm();
 
