@@ -14,7 +14,7 @@ use SupportTicket\Form\Base\SupportTicketUpdateForm as BaseSupportTicketUpdateFo
  */
 class SupportTicketUpdateForm extends BaseSupportTicketUpdateForm
 {
-    public function getTranslationKeys()
+    public function getTranslationKeys(): array
     {
         return array(
             "id" => "id", // ->trans("Id")
@@ -30,7 +30,7 @@ class SupportTicketUpdateForm extends BaseSupportTicketUpdateForm
         );
     }
 
-    public function buildForm()
+    public function buildForm(): void
     {
         parent::buildForm();
 

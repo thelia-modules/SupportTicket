@@ -7,19 +7,28 @@
 namespace SupportTicket\Loop\Base;
 
 use Propel\Runtime\ActiveQuery\Criteria;
+use Propel\Runtime\ActiveQuery\ModelCriteria;
+use Propel\Runtime\Exception\PropelException;
+use SupportTicket\Model\SupportTicketQuery;
 use Thelia\Core\Template\Element\BaseLoop;
 use Thelia\Core\Template\Element\LoopResult;
 use Thelia\Core\Template\Element\LoopResultRow;
 use Thelia\Core\Template\Element\PropelSearchLoopInterface;
 use Thelia\Core\Template\Loop\Argument\Argument;
 use Thelia\Core\Template\Loop\Argument\ArgumentCollection;
-use Thelia\Type\BooleanOrBothType;
-use SupportTicket\Model\SupportTicketQuery;
 
 /**
  * Class SupportTicket
  * @package SupportTicket\Loop\Base
  * @author TheliaStudio
+ * @method getId()
+ * @method getStatus()
+ * @method getCustomerId()
+ * @method getAdminId()
+ * @method getOrderId()
+ * @method getOrderProductId()
+ * @method getSubject()
+ * @method getOrder()
  */
 class SupportTicket extends BaseLoop implements PropelSearchLoopInterface
 {
@@ -28,8 +37,9 @@ class SupportTicket extends BaseLoop implements PropelSearchLoopInterface
      * @param LoopResult $loopResult
      *
      * @return LoopResult
+     * @throws PropelException
      */
-    public function parseResults(LoopResult $loopResult)
+    public function parseResults(LoopResult $loopResult): LoopResult
     {
         /** @var \SupportTicket\Model\SupportTicket $entry */
         foreach ($loopResult->getResultDataCollection() as $entry) {
@@ -79,9 +89,9 @@ class SupportTicket extends BaseLoop implements PropelSearchLoopInterface
      *   );
      * }
      *
-     * @return \Thelia\Core\Template\Loop\Argument\ArgumentCollection
+     * @return ArgumentCollection
      */
-    protected function getArgDefinitions()
+    protected function getArgDefinitions(): ArgumentCollection
     {
         return new ArgumentCollection(
             Argument::createIntListTypeArgument("id"),
@@ -123,7 +133,7 @@ class SupportTicket extends BaseLoop implements PropelSearchLoopInterface
     /**
      * this method returns a Propel ModelCriteria
      *
-     * @return \Propel\Runtime\ActiveQuery\ModelCriteria
+     * @return ModelCriteria
      */
     public function buildModelCriteria()
     {
@@ -226,7 +236,7 @@ class SupportTicket extends BaseLoop implements PropelSearchLoopInterface
         return $query;
     }
 
-    protected function addMoreResults(LoopResultRow $row, $entryObject)
+    protected function addMoreResults(LoopResultRow $row, $entryObject): void
     {
     }
 }

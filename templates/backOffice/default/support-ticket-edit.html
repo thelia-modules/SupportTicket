@@ -156,7 +156,7 @@
                                                 {if $required}<span class="required">*</span>{/if}
                                             </label>
 
-                                            {form_error form=$form field="subject"}{$message}{/form_error}
+                                            {form_error form=$form field="subject"}{$message|default:''}{/form_error}
 
                                                 <input type="text" class="form-control" name="{$name}" id="{$label_attr.for}" value="{$SUBJECT}" {form_field_attributes form=$form field="subject"} placeholder="{intl l='The support ticket subject'}" />
                                         </div>
@@ -168,7 +168,7 @@
                                                 {if $required}<span class="required">*</span>{/if}
                                             </label>
 
-                                            {form_error form=$form field="message"}{$message}{/form_error}
+                                            {form_error form=$form field="message"}{$message|default:''}{/form_error}
 
                                                 <textarea class="form-control" name="{$name}" id="{$label_attr.for}" {form_field_attributes form=$form field="message"} placeholder="{intl l='The support ticket message'}">{$MESSAGE}</textarea>
                                         </div>
@@ -181,7 +181,7 @@
                                                 {if $required}<span class="required">*</span>{/if}
                                             </label>
 
-                                            {form_error form=$form field="response"}{$message}{/form_error}
+                                            {form_error form=$form field="response"}{$message|default:''}{/form_error}
 
                                                 <textarea class="form-control" name="{$name}" id="{$label_attr.for}" {form_field_attributes form=$form field="response"} placeholder="{intl l='The support ticket response'}">{$RESPONSE}</textarea>
                                         </div>
@@ -194,7 +194,7 @@
                                                 {if $required}<span class="required">*</span>{/if}
                                             </label>
 
-                                            {form_error form=$form field="comment"}{$message}{/form_error}
+                                            {form_error form=$form field="comment"}{$message|default:''}{/form_error}
 
                                                 <textarea class="form-control" name="{$name}" id="{$label_attr.for}" {form_field_attributes form=$form field="comment"} placeholder="{intl l='The support ticket comment'}">{$COMMENT}</textarea>
                                         </div>

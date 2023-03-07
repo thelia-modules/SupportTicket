@@ -13,12 +13,13 @@
 
 namespace SupportTicket\Form;
 
+use Propel\Runtime\Exception\PropelException;
 use SupportTicket\SupportTicket;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\ExecutionContextInterface;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Thelia\Core\Translation\Translator;
 use Thelia\Form\BaseForm;
 use Thelia\Model\OrderProductQuery;
@@ -35,13 +36,16 @@ class SupportTicketFrontCreateForm extends BaseForm
     /** @var Translator $translator */
     protected $translator;
 
-    public function verifyOrder($value, ExecutionContextInterface $context)
+    /**
+     * @throws PropelException
+     */
+    public function verifyOrder($value, ExecutionContextInterface $context): void
     {
         $data = $context->getRoot()->getData();
 
         if (!empty($data["order_id"])) {
             $order = OrderQuery::create()->findPk($data["order_id"]);
-            if (null === $order || !$order->isPaid(false) || $order->getCustomerId() != $data["customer_id"]) {
+            if (null === $order || !$order->isPaid(false) || $order->getCustomerId() !== $data["customer_id"]) {
                 $context->addViolation(
                     $this->trans("The order is not a valid order")
                 );
@@ -61,7 +65,7 @@ class SupportTicketFrontCreateForm extends BaseForm
     /**
      * @return string the name of you form. This name must be unique
      */
-    public static function getName()
+    public static function getName(): string
     {
         return "supportticket_new";
     }
@@ -84,9 +88,9 @@ class SupportTicketFrontCreateForm extends BaseForm
      *   )
      *   ->add('age', 'integer');
      *
-     * @return null
+     * @return void
      */
-    protected function buildForm()
+    protected function buildForm(): void
     {
         $this->formBuilder
             ->add(
@@ -95,13 +99,7 @@ class SupportTicketFrontCreateForm extends BaseForm
                 [
                     "constraints" => [
                         new NotBlank(),
-                        new Callback(
-                            [
-                                "methods" => [
-                                    [$this, "verifyOrder"],
-                                ]
-                            ]
-                        )
+                        new Callback( [$this, "verifyOrder"])
                     ]
                 ]
             )
@@ -141,7 +139,7 @@ class SupportTicketFrontCreateForm extends BaseForm
             );
     }
 
-    protected function trans($id, $parameters = [])
+    protected function trans($id, $parameters = []): string
     {
         if (null === $this->translator) {
             $this->translator = Translator::getInstance();

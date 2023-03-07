@@ -14,7 +14,7 @@ use SupportTicket\Form\Base\SupportTicketCreateForm as BaseSupportTicketCreateFo
  */
 class SupportTicketCreateForm extends BaseSupportTicketCreateForm
 {
-    public function getTranslationKeys()
+    public function getTranslationKeys(): array
     {
         return array(
             "status" => "Status", // ->trans("Status")

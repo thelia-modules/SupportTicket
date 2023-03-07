@@ -21,9 +21,9 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class SupportTicketCreateForm extends BaseForm
 {
-    const FORM_NAME = "support_ticket_create";
+    public const FORM_NAME = "support_ticket_create";
 
-    public function buildForm()
+    public function buildForm(): void
     {
         $translationKeys = $this->getTranslationKeys();
         $fieldsIdKeys = $this->getFieldsIdKeys();
@@ -39,7 +39,7 @@ class SupportTicketCreateForm extends BaseForm
         $this->addCommentField($translationKeys, $fieldsIdKeys);
     }
 
-    protected function addStatusField(array $translationKeys, array $fieldsIdKeys)
+    protected function addStatusField(array $translationKeys, array $fieldsIdKeys): void
     {
         $this->formBuilder->add("status", CheckboxType::class, array(
             "label" => $this->translator->trans($this->readKey("status", $translationKeys), [], SupportTicket::MESSAGE_DOMAIN),
@@ -52,7 +52,7 @@ class SupportTicketCreateForm extends BaseForm
         ));
     }
 
-    protected function addCustomerIdField(array $translationKeys, array $fieldsIdKeys)
+    protected function addCustomerIdField(array $translationKeys, array $fieldsIdKeys): void
     {
         $this->formBuilder->add("customer_id", IntegerType::class, array(
             "label" => $this->translator->trans($this->readKey("customer_id", $translationKeys), [], SupportTicket::MESSAGE_DOMAIN),
@@ -66,7 +66,7 @@ class SupportTicketCreateForm extends BaseForm
         ));
     }
 
-    protected function addAdminIdField(array $translationKeys, array $fieldsIdKeys)
+    protected function addAdminIdField(array $translationKeys, array $fieldsIdKeys): void
     {
         $this->formBuilder->add("admin_id", IntegerType::class, array(
             "label" => $this->translator->trans($this->readKey("admin_id", $translationKeys), [], SupportTicket::MESSAGE_DOMAIN),
@@ -79,7 +79,7 @@ class SupportTicketCreateForm extends BaseForm
         ));
     }
 
-    protected function addOrderIdField(array $translationKeys, array $fieldsIdKeys)
+    protected function addOrderIdField(array $translationKeys, array $fieldsIdKeys): void
     {
         $this->formBuilder->add("order_id", IntegerType::class, array(
             "label" => $this->translator->trans($this->readKey("order_id", $translationKeys), [], SupportTicket::MESSAGE_DOMAIN),
@@ -92,7 +92,7 @@ class SupportTicketCreateForm extends BaseForm
         ));
     }
 
-    protected function addOrderProductIdField(array $translationKeys, array $fieldsIdKeys)
+    protected function addOrderProductIdField(array $translationKeys, array $fieldsIdKeys): void
     {
         $this->formBuilder->add("order_product_id", IntegerType::class, array(
             "label" => $this->translator->trans($this->readKey("order_product_id", $translationKeys), [], SupportTicket::MESSAGE_DOMAIN),
@@ -105,7 +105,7 @@ class SupportTicketCreateForm extends BaseForm
         ));
     }
 
-    protected function addSubjectField(array $translationKeys, array $fieldsIdKeys)
+    protected function addSubjectField(array $translationKeys, array $fieldsIdKeys): void
     {
         $this->formBuilder->add("subject", TextType::class, array(
             "label" => $this->translator->trans($this->readKey("subject", $translationKeys), [], SupportTicket::MESSAGE_DOMAIN),
@@ -118,7 +118,7 @@ class SupportTicketCreateForm extends BaseForm
         ));
     }
 
-    protected function addMessageField(array $translationKeys, array $fieldsIdKeys)
+    protected function addMessageField(array $translationKeys, array $fieldsIdKeys): void
     {
         $this->formBuilder->add("message", TextareaType::class, array(
             "label" => $this->translator->trans($this->readKey("message", $translationKeys), [], SupportTicket::MESSAGE_DOMAIN),
@@ -131,7 +131,7 @@ class SupportTicketCreateForm extends BaseForm
         ));
     }
 
-    protected function addResponseField(array $translationKeys, array $fieldsIdKeys)
+    protected function addResponseField(array $translationKeys, array $fieldsIdKeys): void
     {
         $this->formBuilder->add("response", TextareaType::class, array(
             "label" => $this->translator->trans($this->readKey("response", $translationKeys), [], SupportTicket::MESSAGE_DOMAIN),
@@ -144,7 +144,7 @@ class SupportTicketCreateForm extends BaseForm
         ));
     }
 
-    protected function addCommentField(array $translationKeys, array $fieldsIdKeys)
+    protected function addCommentField(array $translationKeys, array $fieldsIdKeys): void
     {
         $this->formBuilder->add("comment", TextareaType::class, array(
             "label" => $this->translator->trans($this->readKey("comment", $translationKeys), [], SupportTicket::MESSAGE_DOMAIN),
@@ -157,26 +157,22 @@ class SupportTicketCreateForm extends BaseForm
         ));
     }
 
-    public static function getName()
+    public static function getName(): string
     {
         return static::FORM_NAME;
     }
 
     public function readKey($key, array $keys, $default = '')
     {
-        if (isset($keys[$key])) {
-            return $keys[$key];
-        }
-
-        return $default;
+        return $keys[$key] ?? $default;
     }
 
-    public function getTranslationKeys()
+    public function getTranslationKeys(): array
     {
         return array();
     }
 
-    public function getFieldsIdKeys()
+    public function getFieldsIdKeys(): array
     {
         return array(
             "status" => "support_ticket_status",

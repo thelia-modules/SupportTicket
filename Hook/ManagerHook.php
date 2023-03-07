@@ -26,7 +26,7 @@ use Thelia\Tools\URL;
 class ManagerHook extends BaseHook
 {
 
-    public function onAccountAdditional(HookRenderBlockEvent $event)
+    public function onAccountAdditional(HookRenderBlockEvent $event): void
     {
         $event->add(
             [
@@ -39,7 +39,7 @@ class ManagerHook extends BaseHook
         );
     }
 
-    public function onMainTopMenuTools(HookRenderBlockEvent $event)
+    public function onMainTopMenuTools(HookRenderBlockEvent $event): void
     {
         $event->add(
             [

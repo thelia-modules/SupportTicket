@@ -18,24 +18,8 @@
 
             <!-- back -->
             <tag name="hook.event_listener" event="main.top-menu-tools" type="back" />
-            <!--
-            <tag name="hook.event_listener" event="order.tab" type="back" />
-            <tag name="hook.event_listener" event="customer.edit" type="back" />
-            -->
+
         </hook>
     </hooks>
-
-    <services>
-        <service id="action.supportticket.support_ticket_table" class="SupportTicket\Action\SupportTicketAction" scope="request">
-            <argument type="service" id="thelia.parser" />
-            <argument type="service" id="mailer"/>
-            <tag name="kernel.event_subscriber"/>
-        </service>
-
-        <service id="supportticket.form.type.support_ticket_id" class="SupportTicket\Form\Type\SupportTicketIdType">
-            <argument id="thelia.translator" type="service"/>
-            <tag name="thelia.form.type"/>
-        </service>
-    </services>
 
 </config>

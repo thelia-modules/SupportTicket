@@ -27,7 +27,7 @@ class SupportTicket extends BaseSupportTicketLoop
      *
      * @param SupportTicketModel $entryObject
      */
-    protected function addMoreResults(LoopResultRow $row, $entryObject)
+    protected function addMoreResults(LoopResultRow $row, $entryObject): void
     {
         if (null === $this->statusText) {
             $this->statusText = [
