@@ -140,15 +140,16 @@ class SupportTicketEvent extends ActionEvent
     /**
      * @return mixed
      */
-    public function getRepliedAt()
+    public function getRepliedAt(): mixed
     {
         return $this->repliedAt;
     }
 
     /**
      * @param mixed $repliedAt
+     * @return SupportTicketEvent
      */
-    public function setRepliedAt($repliedAt): SupportTicketEvent
+    public function setRepliedAt(mixed $repliedAt): SupportTicketEvent
     {
         $this->repliedAt = $repliedAt;
 

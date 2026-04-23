@@ -10,6 +10,7 @@ use Exception;
 use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Propel;
 use RuntimeException;
+use SupportTicket\Event\Base\SupportTicketEvents as SupportTicketEventsAlias;
 use SupportTicket\Event\SupportTicketEvent;
 use SupportTicket\Event\SupportTicketEvents;
 use SupportTicket\Model\Map\SupportTicketTableMap;
@@ -54,7 +55,7 @@ class SupportTicketAction extends BaseAction implements EventSubscriberInterface
     }
 
     /**
-     * @throws PropelException
+     * @throws PropelException|Exception
      */
     protected function createOrUpdate(SupportTicketEvent $event, SupportTicket $model): void
     {
@@ -167,9 +168,9 @@ class SupportTicketAction extends BaseAction implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return array(
-            SupportTicketEvents::CREATE => array("create", 128),
-            SupportTicketEvents::UPDATE => array("update", 128),
-            SupportTicketEvents::DELETE => array("delete", 128),
+            SupportTicketEventsAlias::CREATE => array("create", 128),
+            SupportTicketEventsAlias::UPDATE => array("update", 128),
+            SupportTicketEventsAlias::DELETE => array("delete", 128),
             TheliaEvents::FORM_BEFORE_BUILD . ".support_ticket_create" => array("beforeCreateFormBuild", 128),
             TheliaEvents::FORM_BEFORE_BUILD . ".support_ticket_update" => array("beforeUpdateFormBuild", 128),
             TheliaEvents::FORM_AFTER_BUILD . ".support_ticket_create" => array("afterCreateFormBuild", 128),

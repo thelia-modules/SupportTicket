@@ -27,9 +27,9 @@ class SupportTicketController extends BaseSupportTicketController
      *
      * @param Request $request
      * @param EventDispatcherInterface $eventDispatcher
-     * @return mixed|string|RedirectResponse|Response|\Thelia\Core\HttpFoundation\Response|null
+     * @return RedirectResponse|Response|null
      */
-    public function deletePost(Request $request, EventDispatcherInterface $eventDispatcher)
+    public function deletePost(Request $request, EventDispatcherInterface $eventDispatcher): RedirectResponse|Response|null
     {
         // Check current user authorization
         if (null !== $response = $this->checkAuth($this->resourceCode, $this->getModuleCode(), AccessManager::DELETE)) {
