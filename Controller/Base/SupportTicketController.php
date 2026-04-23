@@ -6,14 +6,17 @@
 
 namespace SupportTicket\Controller\Base;
 
+use Propel\Runtime\ActiveRecord\ActiveRecordInterface;
+use Propel\Runtime\Event\ActiveRecordEvent;
+use SupportTicket\Event\Base\SupportTicketEvents as SupportTicketEventsAlias;
 use SupportTicket\Event\SupportTicketEvent;
-use SupportTicket\Event\SupportTicketEvents;
 use SupportTicket\Form\SupportTicketUpdateForm;
 use SupportTicket\Form\SupportTicketCreateForm;
 use SupportTicket\Model\SupportTicketQuery;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 use Thelia\Controller\Admin\AbstractCrudController;
 use Thelia\Core\Event\ActionEvent;
 use Thelia\Core\Security\Resource\AdminResources;
@@ -28,8 +31,8 @@ use Thelia\Tools\URL;
  */
 class SupportTicketController extends AbstractCrudController
 {
-    protected RequestStack $requestStack;
-    protected ParserContext $parserContext;
+    public RequestStack $requestStack;
+    public ParserContext $parserContext;
 
     public function __construct(RequestStack $requestStack, ParserContext $parserContext)
     {
@@ -41,9 +44,9 @@ class SupportTicketController extends AbstractCrudController
             "id",
             "order",
             AdminResources::MODULE,
-            SupportTicketEvents::CREATE,
-            SupportTicketEvents::UPDATE,
-            SupportTicketEvents::DELETE,
+            SupportTicketEventsAlias::CREATE,
+            SupportTicketEventsAlias::UPDATE,
+            SupportTicketEventsAlias::DELETE,
             null,
             null,
             "SupportTicket"
@@ -97,9 +100,9 @@ class SupportTicketController extends AbstractCrudController
      * Creates the creation event with the provided form data
      *
      * @param mixed $formData
-     * @return ActionEvent
+     * @return ActionEvent|ActiveRecordEvent|null
      */
-    protected function getCreationEvent($formData)
+    protected function getCreationEvent($formData): ActionEvent|ActiveRecordEvent|null
     {
         $event = new SupportTicketEvent();
 
@@ -110,9 +113,9 @@ class SupportTicketController extends AbstractCrudController
      * Creates the update event with the provided form data
      *
      * @param mixed $formData
-     * @return ActionEvent
+     * @return ActionEvent|ActiveRecordEvent|null
      */
-    protected function getUpdateEvent($formData)
+    protected function getUpdateEvent($formData): ActionEvent|ActiveRecordEvent|null
     {
         $event = new SupportTicketEvent();
 
@@ -167,7 +170,7 @@ class SupportTicketController extends AbstractCrudController
      *
      * @param mixed $event
      */
-    protected function getObjectFromEvent($event)
+    protected function getObjectFromEvent($event): mixed
     {
         return $event->getSupportTicket();
     }
@@ -175,7 +178,7 @@ class SupportTicketController extends AbstractCrudController
     /**
      * Load an existing object from the database
      */
-    protected function getExistingObject()
+    protected function getExistingObject(): ?ActiveRecordInterface
     {
         return SupportTicketQuery::create()
             ->findPk($this->requestStack->getCurrentRequest()->query->get("support_ticket_id"))
@@ -197,7 +200,7 @@ class SupportTicketController extends AbstractCrudController
      *
      * @param mixed $object
      */
-    protected function getObjectId($object)
+    protected function getObjectId($object): int
     {
         return $object->getId();
     }
@@ -207,7 +210,7 @@ class SupportTicketController extends AbstractCrudController
      *
      * @param mixed $currentOrder if any, null otherwise.
      */
-    protected function renderListTemplate($currentOrder)
+    protected function renderListTemplate($currentOrder): Response
     {
         $this->getParser()
             ->assign("order", $currentOrder)
@@ -219,7 +222,7 @@ class SupportTicketController extends AbstractCrudController
     /**
      * Render the edition template
      */
-    protected function renderEditionTemplate()
+    protected function renderEditionTemplate(): Response
     {
         $this->parserContext
             ->set(

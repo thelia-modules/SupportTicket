@@ -32,10 +32,6 @@ use Thelia\Model\OrderQuery;
  */
 class SupportTicketFrontCreateForm extends BaseForm
 {
-
-    /** @var Translator $translator */
-    protected $translator;
-
     /**
      * @throws PropelException
      */

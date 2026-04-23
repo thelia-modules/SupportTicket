@@ -14,16 +14,17 @@
 namespace SupportTicket\Controller;
 
 use Exception;
+use SupportTicket\Event\Base\SupportTicketEvents as SupportTicketEventsAlias;
 use SupportTicket\Event\SupportTicketEvent;
-use SupportTicket\Event\SupportTicketEvents;
 use SupportTicket\Model\SupportTicket;
 use SupportTicket\Model\SupportTicketQuery;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Thelia\Controller\Front\BaseFrontController;
 use Thelia\Core\HttpFoundation\Request;
-use Thelia\Core\HttpFoundation\Response;
 use Thelia\Core\Security\SecurityContext;
-use Thelia\Core\Translation\Translator;
 
 /**
  * Class FrontController
@@ -32,8 +33,7 @@ use Thelia\Core\Translation\Translator;
  */
 class FrontController extends BaseFrontController
 {
-    /** @var Translator $translator */
-    protected $translator;
+    public TranslatorInterface $translator;
 
     public function defaultAction(): Response
     {
@@ -62,7 +62,7 @@ class FrontController extends BaseFrontController
             $event->bindForm($formData);
             $event->setStatus(SupportTicket::STATUS_NEW);
 
-            $eventDispatcher->dispatch($event, SupportTicketEvents::CREATE);
+            $eventDispatcher->dispatch($event, SupportTicketEventsAlias::CREATE);
 
             $responseData['success'] = true;
             $responseData['message'] = 'ok';
@@ -73,7 +73,7 @@ class FrontController extends BaseFrontController
         return $this->jsonResponse(json_encode($responseData));
     }
 
-    public function deleteAction($supportTicketId, Request $request, SecurityContext $securityContext, EventDispatcherInterface $eventDispatcher)
+    public function deleteAction($supportTicketId, Request $request, SecurityContext $securityContext, EventDispatcherInterface $eventDispatcher): RedirectResponse
     {
         $this->checkAuth();
 
@@ -87,7 +87,7 @@ class FrontController extends BaseFrontController
                 ->setId($supportTicketId)
                 ->setStatus(SupportTicket::STATUS_CLOSED);
 
-            $eventDispatcher->dispatch($event, SupportTicketEvents::UPDATE);
+            $eventDispatcher->dispatch($event, SupportTicketEventsAlias::UPDATE);
 
             $request->getSession()->getFlashBag()
                 ->add(
@@ -107,10 +107,6 @@ class FrontController extends BaseFrontController
 
     protected function trans($id, $parameters = []): string
     {
-        if (null === $this->translator) {
-            $this->translator = Translator::getInstance();
-        }
-
         return $this->translator->trans($id, $parameters, \SupportTicket\SupportTicket::MESSAGE_DOMAIN);
     }
 }

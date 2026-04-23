@@ -6,6 +6,7 @@
 
 namespace SupportTicket\Form\Type\Base;
 
+use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Thelia\Core\Form\Type\Field\AbstractIdType;
 use SupportTicket\Model\SupportTicketQuery;
@@ -19,7 +20,7 @@ class SupportTicketIdType extends AbstractIdType
 {
     public const TYPE_NAME = IntegerType::class;
 
-    protected function getQuery(): SupportTicketQuery
+    protected function getQuery(): ModelCriteria
     {
         return new SupportTicketQuery();
     }

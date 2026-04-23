@@ -135,7 +135,7 @@ class SupportTicket extends BaseLoop implements PropelSearchLoopInterface
      *
      * @return ModelCriteria
      */
-    public function buildModelCriteria()
+    public function buildModelCriteria(): ModelCriteria
     {
         $query = new SupportTicketQuery();
 
