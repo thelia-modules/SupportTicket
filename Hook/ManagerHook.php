@@ -26,6 +26,9 @@ use Thelia\Tools\URL;
 class ManagerHook extends BaseHook
 {
 
+    /*
+     * DONT WORK ON THELIA 3 !
+     *
     public function onAccountAdditional(HookRenderBlockEvent $event): void
     {
         $event->add(
@@ -50,6 +53,7 @@ class ManagerHook extends BaseHook
             ]
         );
     }
+    */
 
     /*
     public function onOrderTab(HookRenderBlockEvent $event)

@@ -74,7 +74,7 @@ class SupportTicketController extends AbstractCrudController
     }
 
     /**
-     * Hydrate the update form for this object, before passing it to the update template
+     * Hydrate the update form for this object before passing it to the update template
      *
      * @param mixed $object
      */
@@ -156,7 +156,7 @@ class SupportTicketController extends AbstractCrudController
     }
 
     /**
-     * Return true if the event contains the object, e.g. the action has updated the object in the event.
+     * Return true if the event contains the object, e.g., the action has updated the object in the event.
      *
      * @param mixed $event
      */
@@ -186,7 +186,7 @@ class SupportTicketController extends AbstractCrudController
     }
 
     /**
-     * Returns the object label form the object event (name, title, etc.)
+     * Returns the object label from the object event (name, title, etc.)
      *
      * @param mixed $object
      */
