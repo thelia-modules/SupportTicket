@@ -12,7 +12,6 @@ use Propel\Runtime\Propel;
 use RuntimeException;
 use SupportTicket\Event\Base\SupportTicketEvents as SupportTicketEventsAlias;
 use SupportTicket\Event\SupportTicketEvent;
-use SupportTicket\Event\SupportTicketEvents;
 use SupportTicket\Model\Map\SupportTicketTableMap;
 use SupportTicket\Model\SupportTicket;
 use SupportTicket\Model\SupportTicketQuery;

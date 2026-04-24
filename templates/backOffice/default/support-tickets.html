@@ -144,7 +144,7 @@
                             </td>
                             <td>
                                 {if $ORDER_PRODUCT_ID}
-                                    {loop type="order" name="order" id={$ORDER_PRODUCT_ID} backend_context="1"}
+                                    {loop type="order-product" name="order_product" order={$ORDER_PRODUCT_ID} backend_context="1"}
                                         {$TITLE}
                                     {/loop}
                                 {/if}
@@ -200,8 +200,7 @@
         </div>
     </div>
 
-    {capture "support_ticket_delete"}
-        {intl l="Do you really want to delete this support ticket entry ?" d="supportticket.bo.default"}
+    {capture "support_ticket_delete_form"}
         <input type="hidden" name="support_ticket_id" id="support_ticket_delete_id" value="" />
     {/capture}
 
@@ -209,12 +208,13 @@
 
         dialog_id       = "support_ticket-delete"
         dialog_title    = {intl l="Delete an entry of support ticket" d="supportticket.bo.default"}
-        dialog_message  = {$smarty.capture.support_ticket_delete nofilter}
+        dialog_message  = {intl l="Do you really want to delete this support ticket entry ?" d="supportticket.bo.default"}
 
         dialog_ok_label     = {intl l="Delete"}
         dialog_cancel_label = {intl l="Cancel"}
 
         form_action         = {token_url path='/admin/module/SupportTicket/support_ticket/delete'}
+        form_content        = {$smarty.capture.support_ticket_delete_form nofilter}
     }
 {/block}
 

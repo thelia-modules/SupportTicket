@@ -15,6 +15,7 @@ namespace SupportTicket\Hook;
 
 use SupportTicket\SupportTicket;
 use Thelia\Core\Event\Hook\HookRenderBlockEvent;
+use Thelia\Core\Event\Hook\HookRenderEvent;
 use Thelia\Core\Hook\BaseHook;
 use Thelia\Tools\URL;
 
@@ -27,7 +28,7 @@ class ManagerHook extends BaseHook
 {
 
     /*
-     * DONT WORK ON THELIA 3 !
+     * FRONT HOOK DON'T WORK ON THELIA 3!
      *
     public function onAccountAdditional(HookRenderBlockEvent $event): void
     {
@@ -41,6 +42,7 @@ class ManagerHook extends BaseHook
             ]
         );
     }
+    */
 
     public function onMainTopMenuTools(HookRenderBlockEvent $event): void
     {
@@ -53,19 +55,16 @@ class ManagerHook extends BaseHook
             ]
         );
     }
-    */
 
-    /*
-    public function onOrderTab(HookRenderBlockEvent $event)
+    public static function getSubscribedHooks(): array
     {
-        $event->add(
-            [
-                'id' => 'support-ticket',
-                'title' => 'Support Ticket',
-                'href' => '#',
-                'content' => 'Not yet implemented',
+        return [
+            "main.top-menu-tools" => [
+                [
+                    "type" => "back",
+                    "method" => "onMainTopMenuTools"
+                ],
             ]
-        );
+        ];
     }
-    */
 }
