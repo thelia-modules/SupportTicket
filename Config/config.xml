@@ -11,15 +11,16 @@
         <form name="support_ticket.update" class="SupportTicket\Form\SupportTicketUpdateForm"/>
     </forms>
 
+    <!--
     <hooks>
         <hook id="supportticket.hook" class="SupportTicket\Hook\ManagerHook" scope="request">
-            <!-- front -->
+
             <tag name="hook.event_listener" event="account.additional" />
 
-            <!-- back -->
             <tag name="hook.event_listener" event="main.top-menu-tools" type="back" />
 
         </hook>
     </hooks>
+    -->
 
 </config>
