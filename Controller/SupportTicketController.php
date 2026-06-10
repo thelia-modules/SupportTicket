@@ -105,9 +105,18 @@ class SupportTicketController extends BaseSupportTicketController
 
         $adminUser = $this->getSecurityContext()->getAdminUser();
 
+        // Build and expose the update form as a Symfony FormView so that Twig
+        // templates can reference form.subject.vars.full_name etc.
+        // AbstractCrudController::updateAction() only calls parserContext->addForm()
+        // (the Smarty formStore), which TwigParser does not iterate.
+        $changeForm = null !== $ticket
+            ? $this->hydrateObjectForm($this->parserContext, $ticket)
+            : $this->getUpdateForm();
+
         $this->getParser()
             ->assign('support_ticket', null !== $ticket ? $this->presentTicket($ticket) : null)
             ->assign('current_admin_id', null !== $adminUser ? $adminUser->getId() : '')
+            ->assign('form', $changeForm->getForm()->createView())
         ;
 
         return $this->render('support-ticket-edit');
