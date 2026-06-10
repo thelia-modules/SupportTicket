@@ -1,0 +1,113 @@
+{% extends '@BackOfficeDefaultTwig/base.html.twig' %}
+
+{% block title %}{{ 'SupportTicket'|trans({}, 'supportticket.bo.default') }}{% endblock %}
+
+{% block body_testid %}support-tickets-page{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header d-flex align-items-center justify-content-between">
+            <h1 class="h4 card-title mb-0">{{ 'Support ticket'|trans({}, 'supportticket.bo.default') }}</h1>
+        </div>
+        <div class="card-body">
+            {% if general_error|default(false) %}
+                <div class="alert alert-danger">{{ general_error|default('') }}</div>
+            {% endif %}
+
+            <div class="table-responsive">
+                <table class="table table-striped" id="support_ticket-table">
+                    <thead>
+                        <tr>
+                            <th>{{ 'Id'|trans({}, 'supportticket.bo.default') }}</th>
+                            <th>{{ 'Status'|trans({}, 'supportticket.bo.default') }}</th>
+                            <th>{{ 'Customer'|trans({}, 'supportticket.bo.default') }}</th>
+                            <th>{{ 'Administrator'|trans({}, 'supportticket.bo.default') }}</th>
+                            <th>{{ 'Order'|trans({}, 'supportticket.bo.default') }}</th>
+                            <th>{{ 'Product'|trans({}, 'supportticket.bo.default') }}</th>
+                            <th>{{ 'Subject'|trans({}, 'supportticket.bo.default') }}</th>
+                            <th>{{ 'Actions'|trans({}, 'supportticket.bo.default') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ticket in support_tickets|default([]) %}
+                            <tr>
+                                <td>
+                                    <a href="{{ path('supportticket.support_ticket.view', {support_ticket_id: ticket.id}) }}">{{ ticket.id }}</a>
+                                </td>
+                                <td>
+                                    {{ ticket.status_text }}
+                                    {% if ticket.replied_at %}<br><i title="{{ 'Replied on '|trans({}, 'supportticket.bo.default') }}">{{ ticket.replied_at|format_date }}</i>{% endif %}
+                                </td>
+                                <td>
+                                    {% if ticket.customer_name %}
+                                        <a href="{{ path('admin.customer.update.view', {customer_id: ticket.customer_id}) }}">{{ ticket.customer_name }}</a>
+                                    {% endif %}
+                                </td>
+                                <td>{{ ticket.admin_name|default('') }}</td>
+                                <td>
+                                    {% if ticket.order_ref %}
+                                        <a href="{{ path('admin.order.update.view', {order_id: ticket.order_id}) }}">{{ ticket.order_ref }}</a>
+                                    {% endif %}
+                                </td>
+                                <td>{{ ticket.order_product_title|default('') }}</td>
+                                <td>{{ ticket.subject }}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        {% if is_granted('UPDATE', {resource: 'admin.module', module: 'SupportTicket'}) %}
+                                            <a class="btn btn-secondary btn-sm" title="{{ 'Edit this support ticket'|trans({}, 'supportticket.bo.default') }}" href="{{ path('supportticket.support_ticket.view', {support_ticket_id: ticket.id}) }}">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                        {% endif %}
+                                        {% if is_granted('DELETE', {resource: 'admin.module', module: 'SupportTicket'}) %}
+                                            <a class="btn btn-secondary btn-sm support_ticket-delete" title="{{ 'Delete this support ticket'|trans({}, 'supportticket.bo.default') }}" data-bs-target="#support_ticket-delete" data-bs-toggle="modal" data-id="{{ ticket.id }}">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="8">
+                                    <div class="alert alert-info mb-0">{{ 'There is no support ticket'|trans({}, 'supportticket.bo.default') }}</div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {# Delete confirmation modal #}
+    <div class="modal fade" id="support_ticket-delete" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" action="{{ path('supportticket.back.support_ticket.delete') }}?_token={{ assignToken() }}">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ 'Delete an entry of support ticket'|trans({}, 'supportticket.bo.default') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ 'Cancel'|trans({}, 'supportticket.bo.default') }}"></button>
+                    </div>
+                    <div class="modal-body">
+                        {{ 'Do you really want to delete this support ticket entry ?'|trans({}, 'supportticket.bo.default') }}
+                        <input type="hidden" name="support_ticket_id" id="support_ticket_delete_id" value="" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ 'Cancel'|trans({}, 'supportticket.bo.default') }}</button>
+                        <button type="submit" class="btn btn-danger">{{ 'Delete'|trans({}, 'supportticket.bo.default') }}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts_extra %}
+    <script>
+        document.querySelectorAll('a.support_ticket-delete').forEach(function (el) {
+            el.addEventListener('click', function () {
+                document.getElementById('support_ticket_delete_id').value = this.dataset.id;
+            });
+        });
+    </script>
+{% endblock %}

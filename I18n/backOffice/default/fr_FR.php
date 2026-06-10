@@ -26,6 +26,7 @@ return array(
     'Product: ' => 'Produit :',
     'Replied on ' => 'Répondu le',
     'Replied on <strong>%replied_at</strong>.' => 'Répondu le <strong>%replied_at</strong>.',
+    'Save' => 'Enregistrer',
     'Status' => 'Statut',
     'Status: ' => 'Statut :',
     'Subject' => 'Sujet',

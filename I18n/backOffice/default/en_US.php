@@ -22,6 +22,7 @@ return array(
     'Product: ' => 'Product: ',
     'Replied on ' => 'Replied on ',
     'Replied on <strong>%replied_at</strong>.' => 'Replied on <strong>%replied_at</strong>.',
+    'Save' => 'Save',
     'Status' => 'Status',
     'Status: ' => 'Status: ',
     'Subject' => 'Subject',

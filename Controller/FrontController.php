@@ -16,6 +16,7 @@ namespace SupportTicket\Controller;
 use Exception;
 use SupportTicket\Event\Base\SupportTicketEvents as SupportTicketEventsAlias;
 use SupportTicket\Event\SupportTicketEvent;
+use SupportTicket\Form\SupportTicketFrontCreateForm;
 use SupportTicket\Model\SupportTicket;
 use SupportTicket\Model\SupportTicketQuery;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -53,7 +54,7 @@ class FrontController extends BaseFrontController
             "message" => ''
         ];
 
-        $form = $this->createForm('support_ticket.front.create');
+        $form = $this->createForm(SupportTicketFrontCreateForm::getName());
 
         try {
             $formData = $this->validateForm($form);

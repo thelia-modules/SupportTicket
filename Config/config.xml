@@ -4,23 +4,4 @@
     <loops>
         <loop name="support-ticket" class="SupportTicket\Loop\SupportTicket"/>
     </loops>
-
-    <forms>
-        <form name="support_ticket.front.create" class="SupportTicket\Form\SupportTicketFrontCreateForm"/>
-        <form name="support_ticket.create" class="SupportTicket\Form\SupportTicketCreateForm"/>
-        <form name="support_ticket.update" class="SupportTicket\Form\SupportTicketUpdateForm"/>
-    </forms>
-
-    <!--
-    <hooks>
-        <hook id="supportticket.hook" class="SupportTicket\Hook\ManagerHook" scope="request">
-
-            <tag name="hook.event_listener" event="account.additional" />
-
-            <tag name="hook.event_listener" event="main.top-menu-tools" type="back" />
-
-        </hook>
-    </hooks>
-    -->
-
 </config>

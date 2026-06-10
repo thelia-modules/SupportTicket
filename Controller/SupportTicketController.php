@@ -7,14 +7,21 @@
 namespace SupportTicket\Controller;
 
 use DateTime;
+use Propel\Runtime\ActiveQuery\Criteria;
 use SupportTicket\Controller\Base\SupportTicketController as BaseSupportTicketController;
 use SupportTicket\Event\SupportTicketEvent;
 use SupportTicket\Model\SupportTicket;
+use SupportTicket\Model\SupportTicketQuery;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Thelia\Core\HttpFoundation\Request;
 use Thelia\Core\Security\AccessManager;
+use Thelia\Core\Translation\Translator;
+use Thelia\Model\AdminQuery;
+use Thelia\Model\CustomerQuery;
+use Thelia\Model\OrderProductQuery;
+use Thelia\Model\OrderQuery;
 
 /**
  * Class SupportTicketController
@@ -37,11 +44,124 @@ class SupportTicketController extends BaseSupportTicketController
         }
 
         $eventDispatcher->dispatch(
-            (new SupportTicketEvent())->setId($request->get("support_ticket_id")),
+            (new SupportTicketEvent())->setId($request->request->get("support_ticket_id")),
             $this->deleteEventIdentifier
         );
 
         return $this->redirectToListTemplate();
+    }
+
+    /**
+     * Render the list template, supplying the ticket rows to the Twig back-office
+     * (no Smarty {loop} in the default-twig BO: the data is built here).
+     *
+     * @param mixed $currentOrder
+     */
+    protected function renderListTemplate($currentOrder): Response
+    {
+        $query = new SupportTicketQuery();
+
+        switch ($currentOrder) {
+            case 'id': $query->orderById(); break;
+            case 'id-reverse': $query->orderById(Criteria::DESC); break;
+            case 'status': $query->orderByStatus(); break;
+            case 'status-reverse': $query->orderByStatus(Criteria::DESC); break;
+            case 'customer_id': $query->orderByCustomerId(); break;
+            case 'customer_id-reverse': $query->orderByCustomerId(Criteria::DESC); break;
+            case 'admin_id': $query->orderByAdminId(); break;
+            case 'admin_id-reverse': $query->orderByAdminId(Criteria::DESC); break;
+            case 'order_id': $query->orderByOrderId(); break;
+            case 'order_id-reverse': $query->orderByOrderId(Criteria::DESC); break;
+            case 'order_product_id': $query->orderByOrderProductId(); break;
+            case 'order_product_id-reverse': $query->orderByOrderProductId(Criteria::DESC); break;
+            case 'subject': $query->orderBySubject(); break;
+            case 'subject-reverse': $query->orderBySubject(Criteria::DESC); break;
+            default: $query->orderById();
+        }
+
+        $tickets = [];
+        foreach ($query->find() as $ticket) {
+            $tickets[] = $this->presentTicket($ticket);
+        }
+
+        $this->getParser()
+            ->assign('order', $currentOrder)
+            ->assign('support_tickets', $tickets)
+        ;
+
+        return $this->render('support-tickets');
+    }
+
+    /**
+     * Render the edition template with the resolved ticket data.
+     */
+    protected function renderEditionTemplate(): Response
+    {
+        $id = $this->requestStack->getCurrentRequest()->query->get('support_ticket_id');
+
+        $this->parserContext->set('support_ticket_id', $id);
+
+        $ticket = null !== $id ? SupportTicketQuery::create()->findPk($id) : null;
+
+        $adminUser = $this->getSecurityContext()->getAdminUser();
+
+        $this->getParser()
+            ->assign('support_ticket', null !== $ticket ? $this->presentTicket($ticket) : null)
+            ->assign('current_admin_id', null !== $adminUser ? $adminUser->getId() : '')
+        ;
+
+        return $this->render('support-ticket-edit');
+    }
+
+    /**
+     * Build a Twig-friendly representation of a ticket, resolving the related
+     * customer, admin, order and product (the Smarty templates did this through
+     * nested {loop}s that do not exist in the Twig BO).
+     */
+    protected function presentTicket(SupportTicket $ticket): array
+    {
+        $statusText = [
+            SupportTicket::STATUS_NEW => Translator::getInstance()->trans('new', [], \SupportTicket\SupportTicket::MESSAGE_DOMAIN),
+            SupportTicket::STATUS_REPLIED => Translator::getInstance()->trans('replied', [], \SupportTicket\SupportTicket::MESSAGE_DOMAIN),
+            SupportTicket::STATUS_CLOSED => Translator::getInstance()->trans('closed', [], \SupportTicket\SupportTicket::MESSAGE_DOMAIN),
+        ];
+
+        $customer = null !== $ticket->getCustomerId()
+            ? CustomerQuery::create()->findPk($ticket->getCustomerId())
+            : null;
+
+        $admin = null !== $ticket->getAdminId()
+            ? AdminQuery::create()->findPk($ticket->getAdminId())
+            : null;
+
+        $order = null !== $ticket->getOrderId()
+            ? OrderQuery::create()->findPk($ticket->getOrderId())
+            : null;
+
+        $orderProduct = null !== $ticket->getOrderProductId()
+            ? OrderProductQuery::create()->findPk($ticket->getOrderProductId())
+            : null;
+
+        return [
+            'id' => $ticket->getId(),
+            'status' => $ticket->getStatus(),
+            'status_text' => $statusText[$ticket->getStatus()] ?? '',
+            'customer_id' => $ticket->getCustomerId(),
+            'customer_name' => null !== $customer ? trim($customer->getFirstname().' '.$customer->getLastname()) : null,
+            'admin_id' => $ticket->getAdminId(),
+            'admin_name' => null !== $admin ? trim($admin->getFirstname().' '.$admin->getLastname()) : null,
+            'order_id' => $ticket->getOrderId(),
+            'order_ref' => null !== $order ? $order->getRef() : null,
+            'order_product_id' => $ticket->getOrderProductId(),
+            'order_product_title' => null !== $orderProduct ? $orderProduct->getTitle() : null,
+            'subject' => $ticket->getSubject(),
+            'message' => $ticket->getMessage(),
+            'response' => $ticket->getResponse(),
+            'comment' => $ticket->getComment(),
+            'replied_at' => $ticket->getRepliedAt(),
+            'created_at' => $ticket->getCreatedAt(),
+            'updated_at' => $ticket->getUpdatedAt(),
+        ];
     }
 
     protected function getUpdateEvent($formData): SupportTicketEvent

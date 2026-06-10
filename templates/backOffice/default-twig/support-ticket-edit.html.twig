@@ -1,0 +1,108 @@
+{% extends '@BackOfficeDefaultTwig/base.html.twig' %}
+
+{% block title %}{{ 'support ticket'|trans({}, 'supportticket.bo.default') }}{% endblock %}
+
+{% block body_testid %}support-ticket-edit-page{% endblock %}
+
+{% block content %}
+    {% set t = support_ticket %}
+
+    <div class="card">
+        <div class="card-header d-flex align-items-center justify-content-between">
+            <h1 class="h4 card-title mb-0">{{ 'support ticket edit'|trans({}, 'supportticket.bo.default') }}</h1>
+            <a class="btn btn-secondary btn-sm" href="{{ path('supportticket.support_ticket.list') }}">
+                <i class="bi bi-x-lg"></i> {{ 'Cancel'|trans({}, 'supportticket.bo.default') }}
+            </a>
+        </div>
+        <div class="card-body">
+            {% if form_error|default(false) %}
+                <div class="alert alert-danger">{{ form_error_message|default('') }}</div>
+            {% endif %}
+
+            {% if t is null %}
+                <div class="alert alert-warning mb-0">{{ 'There is no support ticket'|trans({}, 'supportticket.bo.default') }}</div>
+            {% else %}
+                <form method="POST" action="{{ path('supportticket.support_ticket.edit') }}?support_ticket_id={{ t.id }}" class="clearfix">
+                    {{ form_errors(form) }}
+
+                    <input type="hidden" name="{{ form.vars.full_name }}[id]" value="{{ t.id }}" />
+                    {% do form.id.setRendered %}
+                    <input type="hidden" name="{{ form.vars.full_name }}[success_url]" value="{{ path('supportticket.support_ticket.list') }}" />
+                    {% if form.success_url is defined %}{% do form.success_url.setRendered %}{% endif %}
+                    <input type="hidden" name="{{ form.vars.full_name }}[admin_id]" value="{{ current_admin_id|default('') }}" />
+                    {% do form.admin_id.setRendered %}
+
+                    <div class="mb-3">
+                        {{ 'Status: '|trans({}, 'supportticket.bo.default') }}
+                        <strong>{{ t.status_text }}</strong>
+                    </div>
+                    {% if t.customer_name %}
+                        <div class="mb-3">
+                            {{ 'Customer: '|trans({}, 'supportticket.bo.default') }}
+                            <a href="{{ path('admin.customer.update.view', {customer_id: t.customer_id}) }}">{{ t.customer_name }}</a>
+                        </div>
+                    {% endif %}
+                    {% if t.admin_name %}
+                        <div class="mb-3">
+                            {{ 'Administrator: '|trans({}, 'supportticket.bo.default') }}
+                            <strong>{{ t.admin_name }}</strong>
+                        </div>
+                    {% endif %}
+                    {% if t.order_ref %}
+                        <div class="mb-3">
+                            {{ 'Order: '|trans({}, 'supportticket.bo.default') }}
+                            <a href="{{ path('admin.order.update.view', {order_id: t.order_id}) }}">{{ t.order_ref }}</a>
+                        </div>
+                    {% endif %}
+                    {% if t.order_product_title %}
+                        <div class="mb-3">
+                            {{ 'Product: '|trans({}, 'supportticket.bo.default') }}
+                            <strong>{{ t.order_product_title }}</strong>
+                        </div>
+                    {% endif %}
+                    <div class="mb-3">
+                        {{ 'created on <strong>%created_at</strong>. Last modification: <strong>%updated_at</strong>'|trans({
+                            '%created_at': t.created_at ? t.created_at|format_date : '',
+                            '%updated_at': t.updated_at ? t.updated_at|format_date : ''
+                        }, 'supportticket.bo.default')|raw }}
+                        {% if t.replied_at %}
+                            <br>{{ 'Replied on <strong>%replied_at</strong>.'|trans({'%replied_at': t.replied_at|format_date}, 'supportticket.bo.default')|raw }}
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ form.subject.vars.id }}">{{ form.subject.vars.label }}</label>
+                        {{ form_errors(form.subject) }}
+                        <input type="text" class="form-control{% if not form.subject.vars.valid %} is-invalid{% endif %}" name="{{ form.subject.vars.full_name }}" id="{{ form.subject.vars.id }}" value="{{ t.subject }}" placeholder="{{ 'The support ticket subject'|trans({}, 'supportticket.bo.default') }}" />
+                        {% do form.subject.setRendered %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ form.message.vars.id }}">{{ form.message.vars.label }}</label>
+                        {{ form_errors(form.message) }}
+                        <textarea class="form-control{% if not form.message.vars.valid %} is-invalid{% endif %}" name="{{ form.message.vars.full_name }}" id="{{ form.message.vars.id }}" placeholder="{{ 'The support ticket message'|trans({}, 'supportticket.bo.default') }}">{{ t.message }}</textarea>
+                        {% do form.message.setRendered %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ form.response.vars.id }}">{{ form.response.vars.label }}</label>
+                        {{ form_errors(form.response) }}
+                        <textarea class="form-control{% if not form.response.vars.valid %} is-invalid{% endif %}" name="{{ form.response.vars.full_name }}" id="{{ form.response.vars.id }}" placeholder="{{ 'The support ticket response'|trans({}, 'supportticket.bo.default') }}">{{ t.response }}</textarea>
+                        {% do form.response.setRendered %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ form.comment.vars.id }}">{{ form.comment.vars.label }}</label>
+                        {{ form_errors(form.comment) }}
+                        <textarea class="form-control{% if not form.comment.vars.valid %} is-invalid{% endif %}" name="{{ form.comment.vars.full_name }}" id="{{ form.comment.vars.id }}" placeholder="{{ 'The support ticket comment'|trans({}, 'supportticket.bo.default') }}">{{ t.comment }}</textarea>
+                        {% do form.comment.setRendered %}
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a class="btn btn-secondary" href="{{ path('supportticket.support_ticket.list') }}">{{ 'Cancel'|trans({}, 'supportticket.bo.default') }}</a>
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> {{ 'Save'|trans({}, 'supportticket.bo.default') }}</button>
+                    </div>
+
+                    {{ form_rest(form) }}
+                </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
