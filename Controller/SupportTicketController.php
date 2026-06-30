@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Thelia\Core\HttpFoundation\Request;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Core\Translation\Translator;
+use Thelia\Tools\TokenProvider;
 use Thelia\Model\AdminQuery;
 use Thelia\Model\CustomerQuery;
 use Thelia\Model\OrderProductQuery;
@@ -36,12 +37,14 @@ class SupportTicketController extends BaseSupportTicketController
      * @param EventDispatcherInterface $eventDispatcher
      * @return RedirectResponse|Response|null
      */
-    public function deletePost(Request $request, EventDispatcherInterface $eventDispatcher): RedirectResponse|Response|null
+    public function deletePost(Request $request, EventDispatcherInterface $eventDispatcher, TokenProvider $tokenProvider): RedirectResponse|Response|null
     {
         // Check current user authorization
         if (null !== $response = $this->checkAuth($this->resourceCode, $this->getModuleCode(), AccessManager::DELETE)) {
             return $response;
         }
+
+        $tokenProvider->checkToken((string) $request->query->get('_token'));
 
         $eventDispatcher->dispatch(
             (new SupportTicketEvent())->setId($request->request->get("support_ticket_id")),
