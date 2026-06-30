@@ -26,6 +26,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Thelia\Controller\Front\BaseFrontController;
 use Thelia\Core\HttpFoundation\Request;
 use Thelia\Core\Security\SecurityContext;
+use Thelia\Tools\TokenProvider;
 
 /**
  * Class FrontController
@@ -36,11 +37,13 @@ class FrontController extends BaseFrontController
 {
     public TranslatorInterface $translator;
 
-    public function defaultAction(): Response
+    public function defaultAction(TokenProvider $tokenProvider): Response
     {
         $this->checkAuth();
 
-        return $this->render('support-ticket');
+        return $this->render('support-ticket', [
+            'delete_csrf_token' => $tokenProvider->assignToken(),
+        ]);
     }
 
     public function createAction(EventDispatcherInterface $eventDispatcher): Response
@@ -74,9 +77,11 @@ class FrontController extends BaseFrontController
         return $this->jsonResponse(json_encode($responseData));
     }
 
-    public function deleteAction($supportTicketId, Request $request, SecurityContext $securityContext, EventDispatcherInterface $eventDispatcher): RedirectResponse
+    public function deleteAction($supportTicketId, Request $request, SecurityContext $securityContext, EventDispatcherInterface $eventDispatcher, TokenProvider $tokenProvider): RedirectResponse
     {
         $this->checkAuth();
+
+        $tokenProvider->checkToken((string) $request->request->get('_token'));
 
         $supportTicket = SupportTicketQuery::create()->findPk($supportTicketId);
         $customerId = $securityContext->getCustomerUser()->getId();
