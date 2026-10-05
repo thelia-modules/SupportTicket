@@ -82,7 +82,8 @@
     {# Delete confirmation modal #}
     <div class="modal fade" id="support_ticket-delete" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
-            <form method="POST" action="{{ path('supportticket.back.support_ticket.delete') }}?_token={{ assignToken() }}">
+            <form method="POST" action="{{ path('supportticket.back.support_ticket.delete') }}">
+                <input type="hidden" name="_token" value="{{ assignToken() }}">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">{{ 'Delete an entry of support ticket'|trans({}, 'supportticket.bo.default') }}</h5>
