@@ -44,7 +44,7 @@ class SupportTicketController extends BaseSupportTicketController
             return $response;
         }
 
-        $tokenProvider->checkToken((string) $request->query->get('_token'));
+        $tokenProvider->checkToken((string) $request->request->get('_token'));
 
         $eventDispatcher->dispatch(
             (new SupportTicketEvent())->setId($request->request->get("support_ticket_id")),
