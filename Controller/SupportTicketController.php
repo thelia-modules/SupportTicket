@@ -87,12 +87,10 @@ class SupportTicketController extends BaseSupportTicketController
             $tickets[] = $this->presentTicket($ticket);
         }
 
-        $this->getParser()
-            ->assign('order', $currentOrder)
-            ->assign('support_tickets', $tickets)
-        ;
-
-        return $this->render('support-tickets');
+        return $this->render('support-tickets', [
+            'order' => $currentOrder,
+            'support_tickets' => $tickets,
+        ]);
     }
 
     /**
@@ -116,13 +114,11 @@ class SupportTicketController extends BaseSupportTicketController
             ? $this->hydrateObjectForm($this->parserContext, $ticket)
             : $this->getUpdateForm();
 
-        $this->getParser()
-            ->assign('support_ticket', null !== $ticket ? $this->presentTicket($ticket) : null)
-            ->assign('current_admin_id', null !== $adminUser ? $adminUser->getId() : '')
-            ->assign('form', $changeForm->getForm()->createView())
-        ;
-
-        return $this->render('support-ticket-edit');
+        return $this->render('support-ticket-edit', [
+            'support_ticket' => null !== $ticket ? $this->presentTicket($ticket) : null,
+            'current_admin_id' => null !== $adminUser ? $adminUser->getId() : '',
+            'form' => $changeForm->getForm()->createView(),
+        ]);
     }
 
     /**
